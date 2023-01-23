@@ -19,7 +19,7 @@ const usersSchema = new Schema(
         endDate: { type: Date, required: true },
         description: { type: String, required: true },
         area: { type: String, required: true },
-        image: { type: String },
+        image: { type: String},
       },
     ],
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],

@@ -49,6 +49,7 @@ router.get('/api/users/:userId/experiences', (req, res) => {
           endDate: req.body.endDate,
           area: req.body.area,
           description: req.body.description,
+          image: req.body.image,
    // add other fields as required
 });
 user.save()
@@ -97,6 +98,9 @@ router.get('/api/users/:userId/experiences/:expId', (req, res) => {
     experience.company = req.body.company;
     experience.startDate = req.body.startDate;
     experience.endDate = req.body.endDate;
+    experience.area = req.body.area;
+    experience.description = req.body.description;
+    experience.image = req.body.image;
     // add other fields as required
     user.save()
     .then((updatedUser) => {
@@ -137,8 +141,8 @@ router.get('/api/users/:userId/experiences/:expId', (req, res) => {
         });
       
     // Change the experience picture
-router.post('/api/profile/:userName/experiences/:expId/picture', upload.single('experiencePicture'), (req, res) => {
-    User.findOne({ userName: req.params.userName })
+router.post('/api/profile/:userId/experiences/:expId/picture', upload.single('experiencePicture'), (req, res) => {
+    User.findOne({ userId: req.params.userId })
     .then((user) => {
     if (!user) {
     return res.status(404).json({ message: 'User not found' });
@@ -162,8 +166,8 @@ router.post('/api/profile/:userName/experiences/:expId/picture', upload.single('
     });
       
       // Download the experiences as a CSV
-router.get('/api/profile/:userName/experiences/CSV', (req, res) => {
-    User.findOne({ userName: req.params.userName })
+router.get('/api/profile/:userId/experiences/CSV', (req, res) => {
+    User.findOne({ userId: req.params.userId })
     .then((user) => {
     if (!user) {
     return res.status(404).json({ message: 'User not found' });
@@ -172,7 +176,7 @@ router.get('/api/profile/:userName/experiences/CSV', (req, res) => {
     const fields = ['role', 'company', 'startDate', 'endDate', 'description', 'area', 'image'];
     const opts = { fields };
     const csv = json2csv.parse(user.experiences, opts);
-    res.attachment('experiences-${req.params.userName}.csv');
+    res.attachment('experiences-${req.params.userId}.csv');
     return res.status(200).send(csv);
     } catch (err) {
     return res.status(500).json({ message: 'Error generating CSV' });
