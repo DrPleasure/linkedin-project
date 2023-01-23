@@ -3,6 +3,7 @@ import createHttpError from "http-errors";
 import q2m from "query-to-mongo";
 import { checksUserSchema, checkFilteredUserSchema, triggerBadRequest } from "./validator.js";
 import Users from "./model.js";
+import uniqid from "uniqid";
 
 const { NotFound } = createHttpError;
 
@@ -11,7 +12,12 @@ const router = express.Router();
 // POST
 router.post(`/`, checksUserSchema, async (req, res, next) => {
   try {
-    const newUser = new Users(req.body);
+    let { surname } = req.body;
+    const uniqueString = uniqid();
+
+    const body = { ...req.body, username: `${surname}${uniqueString}` };
+
+    const newUser = new Users(body);
 
     const user = await newUser.save();
     // console.log("POST - new user: ", newUser);
