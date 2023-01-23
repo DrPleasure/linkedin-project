@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Get user experiences
-router.get("/api/:userId/experiences", (req, res) => {
+router.get("/:userId/experiences", (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -36,7 +36,7 @@ router.get("/api/:userId/experiences", (req, res) => {
 });
 
 // Create an experience
-router.post("/api/:userId/experiences", (req, res) => {
+router.post("/:userId/experiences", (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -69,7 +69,7 @@ router.post("/api/:userId/experiences", (req, res) => {
 });
 
 // Get a specific experience
-router.get("/api/:userId/experiences/:expId", (req, res) => {
+router.get("/:userId/experiences/:expId", (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -87,7 +87,7 @@ router.get("/api/:userId/experiences/:expId", (req, res) => {
 });
 
 // Edit a specific experience
-router.put("/api/:userId/experiences/:expId", (req, res) => {
+router.put("/:userId/experiences/:expId", (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -120,7 +120,7 @@ router.put("/api/:userId/experiences/:expId", (req, res) => {
 });
 
 // Delete a specific experience
-router.delete("/api/:userId/experiences/:expId", (req, res) => {
+router.delete("/:userId/experiences/:expId", (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -147,7 +147,7 @@ router.delete("/api/:userId/experiences/:expId", (req, res) => {
 
 // Change the experience picture
 router.post(
-  "/api/:userId/experiences/:expId/picture",
+  "/:userId/experiences/:expId/picture",
   upload.single("experiencePicture"),
   (req, res) => {
     User.findOne({ userId: req.params.userId })
@@ -175,7 +175,7 @@ router.post(
   }
 );
 
-router.get("/api/:userId/experiences/CSV", (req, res) => {
+router.get("/:userId/experiences/CSV", (req, res) => {
   console.log("Request received for userId: ", req.params.userId);
   User.findOne({ userId: req.params.userId })
     .then((user) => {
