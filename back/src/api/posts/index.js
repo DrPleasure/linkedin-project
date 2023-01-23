@@ -13,13 +13,25 @@ postsRouter.post(
   triggerBadRequest,
   async (req, res, next) => {
     try {
+      const userId = req.body.user;
+
       const newPost = new PostsModel(req.body);
-      console.log("🚀 ~ file: index.js:17 ~ newPost", newPost);
 
       // here it happens validation (thanks to Mongoose) of req.body, if it is not ok Mongoose will throw an error
       // if it is ok the post is not saved yet
       const { _id } = await newPost.save();
-      res.status(201).send({ _id });
+
+      // 1. get the User with id: req.body.user
+      const updatedUser = await UsersModel.findByIdAndUpdate(
+        userId,
+        { $push: { posts: _id } },
+        { new: true, runValidators: true }
+      );
+
+      res.status(201).send({
+        message: `Post with ${_id} created abd user with ${userId} updated!`,
+        updatedUser: updatedUser,
+      });
     } catch (error) {
       next(error);
     }
