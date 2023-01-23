@@ -2,12 +2,8 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import usersRouter from "./api/users/index.js";
-import postsRouter from "./api/posts/index.js";
-import {
-  badRequestHandler,
-  notFoundHandler,
-  genericErrorHandler,
-} from "./errorHandlers.js";
+// import postsRouter from "./api/posts/index.js";
+import { badRequestHandler, notFoundHandler, genericErrorHandler } from "./errorHandlers.js";
 import mongoose from "mongoose";
 
 const { PORT, MONGO_URL, FE_PROD_URL, FE_DEV_URL } = process.env;
@@ -34,9 +30,7 @@ const corsOpts = {
       corsNext(null, true);
     } else {
       // If it is not --> error
-      corsNext(
-        createHttpError(400, `Origin ${origin} is not in the whitelist!`)
-      );
+      corsNext(createHttpError(400, `Origin ${origin} is not in the whitelist!`));
     }
   },
 };
@@ -46,7 +40,7 @@ server.use(cors(corsOpts));
 server.use(express.json());
 
 server.use("/users", usersRouter);
-server.use("/posts", postsRouter);
+//server.use("/posts", postsRouter);
 
 server.use(badRequestHandler);
 server.use(notFoundHandler);

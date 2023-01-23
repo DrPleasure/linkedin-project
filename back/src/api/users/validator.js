@@ -1,6 +1,8 @@
 import { checkSchema, validationResult } from "express-validator";
 import createHttpError from "http-errors";
 
+const { BadRequest } = createHttpError;
+
 const userSchema = {
   name: {
     in: ["body"],
@@ -17,99 +19,101 @@ const userSchema = {
   email: {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Email is a mandatory field. Please supply a email which is a string.",
+      errorMessage: "Email is a mandatory field. Please supply a email which is a string.",
     },
   },
   bio: {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Bio is a mandatory field. Please supply a bio which is a string.",
+      errorMessage: "Bio is a mandatory field. Please supply a bio which is a string.",
     },
   },
   title: {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Title is a mandatory field. Please supply a title which is a string.",
+      errorMessage: "Title is a mandatory field. Please supply a title which is a string.",
     },
   },
   area: {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Area is a mandatory field. Please supply an area which is a string.",
+      errorMessage: "Area is a mandatory field. Please supply an area which is a string.",
     },
   },
   username: {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Username is a mandatory field. Please supply a username which is a string.",
+      errorMessage: "Username is a mandatory field. Please supply a username which is a string.",
     },
   },
   "experiences.role": {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Role is a mandatory field. Please supply a role which is a string.",
+      errorMessage: "Role is a mandatory field. Please supply a role which is a string.",
     },
   },
   "experiences.company": {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Company is a mandatory field. Please supply a company which is a string.",
+      errorMessage: "Company is a mandatory field. Please supply a company which is a string.",
     },
   },
   "experiences.startDate": {
     in: ["body"],
     isString: {
-      errorMessage:
-        "StartDate is a mandatory field. Please supply a startDate which is a string.",
+      errorMessage: "StartDate is a mandatory field. Please supply a startDate which is a string.",
     },
   },
   "experiences.endDate": {
     in: ["body"],
     isString: {
-      errorMessage:
-        "EndDate is a mandatory field. Please supply a endDate which is a string.",
+      errorMessage: "EndDate is a mandatory field. Please supply a endDate which is a string.",
     },
   },
   "experiences.description": {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Description is a mandatory field. Please supply a description which is a string.",
+      errorMessage: "Description is a mandatory field. Please supply a description which is a string.",
     },
   },
   "experiences.area": {
     in: ["body"],
     isString: {
-      errorMessage:
-        "Area is a mandatory field. Please supply a area which is a string.",
+      errorMessage: "Area is a mandatory field. Please supply a area which is a string.",
     },
   },
 };
 
+const filteredUserSchema = {
+  name: {
+    in: ["query"],
+    isString: {
+      errorMessage: "name must be in query and type must be string to search!",
+    },
+  },
+  email: {
+    in: ["query"],
+    isString: {
+      errorMessage: "email must be in query and type must be a string to search!",
+    },
+  },
+};
+
+export const checkFilteredUserSchema = checkSchema(filteredUserSchema);
+
 export const checksUserSchema = checkSchema(userSchema);
 
 export const triggerBadRequest = (req, res, next) => {
-  // 1. Check if previous middleware ( checksBlogUsersSchema) has detected any error in req.body
-  const errors = validationResult(req);
+  const errorList = validationResult(req);
 
-  console.log(errors.array());
-
-  if (!errors.isEmpty()) {
-    // 2.1 If we have any error --> trigger error handler 400
+  if (!errorList.isEmpty()) {
     next(
-      createHttpError(400, "Errors during User validation", {
-        errorsList: errors.array(),
+      BadRequest({
+        message: "Error during post validation",
+        errors: errorList.array(),
       })
     );
   } else {
-    // 2.2 Else (no errors) --> normal flow (next)
     next();
   }
 };
