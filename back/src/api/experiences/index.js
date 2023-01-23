@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../models'); // import your database
+const usersModel = require('../users/model.js'); // import database here
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -50,7 +50,7 @@ router.post('/api/users/:userId/experiences', (req, res) => {
 });
 
 // Get a specific experience
-experiencesRouter.get('/api/users/:userId/experiences/:expId', (req, res) => {
+router.get('/api/users/:userId/experiences/:expId', (req, res) => {
   db.Experience.findOne({
     where: {
       userId: req.params.userId,
@@ -69,7 +69,7 @@ experiencesRouter.get('/api/users/:userId/experiences/:expId', (req, res) => {
 });
 
 // Edit a specific experience
-experiencesRouter.put('/api/users/:userId/experiences/:expId', (req, res) => {
+router.put('/api/users/:userId/experiences/:expId', (req, res) => {
   db.Experience.findOne({
     where: {
       userId: req.params.userId,
@@ -114,7 +114,7 @@ experiencesRouter.put('/api/users/:userId/experiences/:expId', (req, res) => {
       });
       
       // Change the experience picture
-      experiencesRouter.post('/api/profile/:userName/experiences/:expId/picture', upload.single('experiencePicture'), (req, res) => {
+      router.post('/api/profile/:userName/experiences/:expId/picture', upload.single('experiencePicture'), (req, res) => {
       db.Experience.findOne({
       where: {
       userName: req.params.userName,
