@@ -11,7 +11,6 @@ router.post(`/`, checksUserSchema, async (req, res, next) => {
   try {
     let { surname } = req.body;
     const uniqueString = `${surname + uniqid()}`;
-    console.log(uniqueString);
 
     // come back to it - make a proper function
     const body = { ...req.body, username: uniqueString.slice(0, uniqueString.length - 12) };
