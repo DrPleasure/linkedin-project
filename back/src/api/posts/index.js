@@ -29,19 +29,18 @@ postsRouter.post(
 postsRouter.get("/", async (req, res, next) => {
   try {
     let query = {};
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
-    const total = await PostsModel.countDocuments(query);
-    const posts = await PostsModel.find(query)
-      .populate("user")
-      .skip((page - 1) * limit)
-      .limit(limit);
+    // const page = req.query.page || 1;
+    // const limit = req.query.limit || 10;
+    // const total = await PostsModel.countDocuments(query);
+    const posts = await PostsModel.find(query).populate("user");
+    //   .skip((page - 1) * limit)
+    //   .limit(limit);
 
-    res.send({
-      total,
-      totalPages: Math.ceil(total / limit),
-      posts,
-    });
+    res.send(
+      //   total,
+      //   totalPages: Math.ceil(total / limit),
+      posts
+    );
   } catch (error) {
     next(error);
   }
