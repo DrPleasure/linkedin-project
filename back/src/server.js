@@ -2,7 +2,7 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 // import usersRouter from "./api/users/index.js";
-// import postsRouter from "./api/posts/index.js";
+ import postsRouter from "./api/posts/index.js";
 import router from "./api/experiences/index.js";
 import experiencesRouter from "./api/experiences/index.js";
 import {
@@ -49,7 +49,7 @@ server.use(express.json());
 
 // server.use("/users", usersRouter);
 server.use("/", router);
-// server.use("/posts", postsRouter);
+server.use("/posts", postsRouter);
 
 server.use(badRequestHandler);
 server.use(notFoundHandler);

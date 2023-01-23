@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Get user experiences
-router.get('/api/users/:userId/experiences', (req, res) => {
+router.get('/api/:userId/experiences', (req, res) => {
     User.findById(req.params.userId)
       .then((user) => {
         if (!user) {
@@ -36,7 +36,7 @@ router.get('/api/users/:userId/experiences', (req, res) => {
   });
   
   // Create an experience
-  router.post('/api/users/:userId/experiences', (req, res) => {
+  router.post('/api/:userId/experiences', (req, res) => {
     User.findById(req.params.userId)
       .then((user) => {
         if (!user) {
@@ -66,7 +66,7 @@ res.status(500).send(err);
 });
 
 // Get a specific experience
-router.get('/api/users/:userId/experiences/:expId', (req, res) => {
+router.get('/api/:userId/experiences/:expId', (req, res) => {
     User.findById(req.params.userId)
     .then((user) => {
     if (!user) {
@@ -84,7 +84,7 @@ router.get('/api/users/:userId/experiences/:expId', (req, res) => {
     });
     
     // Edit a specific experience
-    router.put('/api/users/:userId/experiences/:expId', (req, res) => {
+    router.put('/api/:userId/experiences/:expId', (req, res) => {
     User.findById(req.params.userId)
     .then((user) => {
     if (!user) {
@@ -116,7 +116,7 @@ router.get('/api/users/:userId/experiences/:expId', (req, res) => {
     });
     
     // Delete a specific experience
-    router.delete('/api/users/:userId/experiences/:expId', (req, res) => {
+    router.delete('/api/:userId/experiences/:expId', (req, res) => {
     User.findById(req.params.userId)
     .then((user) => {
     if (!user) {
@@ -141,13 +141,13 @@ router.get('/api/users/:userId/experiences/:expId', (req, res) => {
         });
       
     // Change the experience picture
-router.post('/api/profile/:userId/experiences/:expId/picture', upload.single('experiencePicture'), (req, res) => {
+router.put('/api/:userId/experiences/:expId/picture', upload.single('experiencePicture'), (req, res) => {
     User.findOne({ userId: req.params.userId })
     .then((user) => {
     if (!user) {
     return res.status(404).json({ message: 'User not found' });
     }
-    const experience = user.experiences.id(req.params.expId);
+    const experience = user.experiences._id(req.params.expId);
     if (!experience) {
     return res.status(404).json({ message: 'Experience not found' });
     }
@@ -166,14 +166,14 @@ router.post('/api/profile/:userId/experiences/:expId/picture', upload.single('ex
     });
       
       // Download the experiences as a CSV
-router.get('/api/profile/:userId/experiences/CSV', (req, res) => {
+router.get('/api/:userId/experiences/CSV', (req, res) => {
     User.findOne({ userId: req.params.userId })
     .then((user) => {
     if (!user) {
     return res.status(404).json({ message: 'User not found' });
     }
     try {
-    const fields = ['role', 'company', 'startDate', 'endDate', 'description', 'area', 'image'];
+    const fields = ['role', 'company', 'startDate', 'endDate', 'description', 'area'];
     const opts = { fields };
     const csv = json2csv.parse(user.experiences, opts);
     res.attachment('experiences-${req.params.userId}.csv');
