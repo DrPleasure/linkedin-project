@@ -10,6 +10,7 @@ import {
   notFoundHandler,
   genericErrorHandler,
 } from "./errorHandlers.js";
+
 import mongoose from "mongoose";
 
 const { PORT, MONGO_URL, FE_PROD_URL, FE_DEV_URL } = process.env;
@@ -36,9 +37,7 @@ const corsOpts = {
       corsNext(null, true);
     } else {
       // If it is not --> error
-      corsNext(
-        createHttpError(400, `Origin ${origin} is not in the whitelist!`)
-      );
+      corsNext(createHttpError(400, `Origin ${origin} is not in the whitelist!`));
     }
   },
 };
@@ -50,6 +49,7 @@ server.use(express.json());
 // server.use("/users", usersRouter);
 server.use("/", router);
 server.use("/posts", postsRouter);
+
 
 server.use(badRequestHandler);
 server.use(notFoundHandler);
