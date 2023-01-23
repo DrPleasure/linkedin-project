@@ -14,18 +14,18 @@ const postSchema = {
       errorMessage: "Username is a mandatory field and needs to be a String.",
     },
   },
-  "user.name": {
+  image: {
     in: ["body"],
     isString: {
       errorMessage:
-        "User name is a mandatory field. Please supply a name which is a string.",
+        "Image is a mandatory field and needs to be a URL as a String.",
     },
   },
-  "user.surname": {
+  user: {
     in: ["body"],
     isString: {
       errorMessage:
-        "User surname is a mandatory field. Please supply a surname which is a string.",
+        "User is a mandatory field. Please supply a ID which is a string.",
     },
   },
 };
@@ -34,15 +34,15 @@ export const checksPostSchema = checkSchema(postSchema);
 
 export const triggerBadRequest = (req, res, next) => {
   // 1. Check if previous middleware ( checksBlogPostsSchema) has detected any error in req.body
-  const errors = validationResult(req);
+  const errorsList = validationResult(req);
 
-  console.log(errors.array());
+  console.log(errorsList.array());
 
-  if (!errors.isEmpty()) {
+  if (!errorsList.isEmpty()) {
     // 2.1 If we have any error --> trigger error handler 400
     next(
-      createHttpError(400, "Errors during blogPost validation", {
-        errorsList: errors.array(),
+      createHttpError(400, "Errors during Post validation", {
+        errors: errorsList.array(),
       })
     );
   } else {

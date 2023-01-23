@@ -1,6 +1,7 @@
 import express from "express";
 import createHttpError from "http-errors";
 import PostsModel from "./model.js";
+import UsersModel from "../users/model.js";
 import { checksPostSchema, triggerBadRequest } from "./validator.js";
 // import q2m from "query-to-mongo";
 
@@ -13,6 +14,8 @@ postsRouter.post(
   async (req, res, next) => {
     try {
       const newPost = new PostsModel(req.body);
+      console.log("🚀 ~ file: index.js:17 ~ newPost", newPost);
+
       // here it happens validation (thanks to Mongoose) of req.body, if it is not ok Mongoose will throw an error
       // if it is ok the post is not saved yet
       const { _id } = await newPost.save();
@@ -26,20 +29,14 @@ postsRouter.post(
 postsRouter.get("/", async (req, res, next) => {
   try {
     let query = {};
-    if (req.query.category) {
-      query.category = req.query.category;
-    }
-    if (req.query.price) {
-      query.price = { $lt: req.query.price };
-    }
-
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
     const total = await PostsModel.countDocuments(query);
     const posts = await PostsModel.find(query)
+      .populate("user")
       .skip((page - 1) * limit)
-      .limit(limit)
-      .populate("reviews");
+      .limit(limit);
+
     res.send({
       total,
       totalPages: Math.ceil(total / limit),
@@ -52,9 +49,7 @@ postsRouter.get("/", async (req, res, next) => {
 
 postsRouter.get("/:postId", async (req, res, next) => {
   try {
-    const post = await PostsModel.findById(req.params.postId).populate(
-      "reviews"
-    ); // .populate({path:"reviews"}) 2nd version
+    const post = await PostsModel.findById(req.params.postId).populate("user"); // .populate({path:"user"}) 2nd version
 
     if (post) {
       res.send(post);
@@ -76,13 +71,6 @@ postsRouter.put("/:postId", async (req, res, next) => {
       { new: true, runValidators: true } // options. By default findByIdAndUpdate returns the record pre-modification. If you want to get back the newly updated record you shall use new:true
       // By default validation is off in the findByIdAndUpdate --> runValidators:true
     );
-
-    // ****** ALTERNATIVE METHOD ******
-    /*     const post = await PostsModel.findById(req.params.postId)
-    // When you do a findById, findOne,.... you get back a MONGOOSE DOCUMENT which is NOT a normal object
-    // It is an object with superpowers, for instance it has the .save() method that will be very useful in some cases
-    post.age = 100
-    await post.save() */
 
     if (updatedPost) {
       res.send(updatedPost);

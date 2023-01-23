@@ -1,7 +1,7 @@
 import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
-import usersRouter from "./api/users/index.js";
+// import usersRouter from "./api/users/index.js";
 import postsRouter from "./api/posts/index.js";
 import {
   badRequestHandler,
@@ -45,7 +45,7 @@ server.use(cors(corsOpts));
 
 server.use(express.json());
 
-server.use("/users", usersRouter);
+// server.use("/users", usersRouter);
 server.use("/posts", postsRouter);
 
 server.use(badRequestHandler);
