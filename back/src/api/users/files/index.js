@@ -7,9 +7,13 @@ import createHttpError from "http-errors";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
+import { getPdfReadableStream } from "../../../lib/pdf-tools.js";
+import { pipeline } from "stream";
+
 const { NotFound } = createHttpError;
 
-const router = express.Router();
+export const pictureUploadRouter = express.Router();
+export const pdfDownloadRouter = express.Router();
 
 const cloudinaryUploader = multer({
   storage: new CloudinaryStorage({
@@ -20,7 +24,8 @@ const cloudinaryUploader = multer({
   }),
 }).single("profilePicture");
 
-router.post("/:userId/picture", cloudinaryUploader, async (req, res, next) => {
+// PICTURE upload
+pictureUploadRouter.post("/:userId/picture", cloudinaryUploader, async (req, res, next) => {
   try {
     const { userId } = req.params;
     console.log("the req.file is: ", req.file);
@@ -42,35 +47,27 @@ router.post("/:userId/picture", cloudinaryUploader, async (req, res, next) => {
   }
 });
 
-router.post("/:userId/picture", cloudinaryUploader, async (req, res, next) => {
+// GET - PDF download
+pdfDownloadRouter.get("/:userId/cv", async (req, res, next) => {
   try {
     const { userId } = req.params;
-    console.log("the req.file is: ", req.file);
-    const url = req.file.path;
-    // const blogPosts = await getBlogPosts();
 
-    // const updatedUser = await Users.findByIdAndUpdate(
-    //   userId,
-    //   { $push: { picture: url } },
-    //   { new: true, runValidators: true }
-    // );
-    const selectedUser = await Users.findById(userId);
+    const user = await Users.findById(userId);
+    // console.log("user", user);
 
-    if (selectedUser) {
-      const updatedUser = { ...selectedUser.toObject(), picture: url, updatedAt: new Date() };
-      console.log("updatedUser", updatedUser);
-      // await updatedUser.save();
+    if (user) {
+      res.setHeader("Content-Disposition", "attachment; cv.pdf");
 
-      res.send({
-        message: `The user with id: ${userId} successfully updated; you can see it below`,
-        updatedUser: updatedUser,
+      const source = getPdfReadableStream(user);
+      const destination = res;
+
+      pipeline(source, destination, (err) => {
+        if (err) console.log(err);
       });
     } else {
-      next(NotFound(`The user with id: ${userId} is not in the Linkedin archive`));
+      console.log(`There is no user with this id: ${userId}`);
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
-export default router;
