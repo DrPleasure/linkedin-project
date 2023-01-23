@@ -15,25 +15,29 @@ postsRouter.post(
   triggerBadRequest,
   async (req, res, next) => {
     try {
-      const userId = req.body.user;
-
       const newPost = new PostsModel(req.body);
-
-      // here it happens validation (thanks to Mongoose) of req.body, if it is not ok Mongoose will throw an error
+      console.log("🚀 ~ file: index.js:19 ~ newPost ", newPost);
+      // here it happens validation (thanks to Mongoose) of req.body, if it is not
+      // ok Mongoose will throw an error
       // if it is ok the post is not saved yet
-      const { _id } = await newPost.save();
-
       // 1. get the User with id: req.body.user
+      const userId = req.body.user;
       const updatedUser = await UsersModel.findByIdAndUpdate(
         userId,
-        { $push: { posts: _id } },
+        { $push: { posts: newPost._id } },
         { new: true, runValidators: true }
       );
+      if (updatedUser) {
+        console.log("🚀 ~ file: index.js:31 ~ updatedUser", updatedUser);
+        const { _id } = await newPost.save();
 
-      res.status(201).send({
-        message: `Post with ${_id} created and user with ${userId} updated!`,
-        updatedUser: updatedUser,
-      });
+        res.status(201).send({
+          message: `Post with ID: ${_id} created and user.posts with ID: ${userId} updated!`,
+          updatedUser: updatedUser,
+        });
+      } else {
+        next(createHttpError(404, `User with id ${userId} not found!`));
+      }
     } catch (error) {
       next(error);
     }
