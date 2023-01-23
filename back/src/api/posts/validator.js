@@ -8,12 +8,12 @@ const postSchema = {
       errorMessage: "Text is a mandatory field and needs to be a String.",
     },
   },
-  username: {
-    in: ["body"],
-    isString: {
-      errorMessage: "Username is a mandatory field and needs to be a String.",
-    },
-  },
+  //   username: {
+  //     in: ["body"],
+  //     isString: {
+  //       errorMessage: "Username is a mandatory field and needs to be a String.",
+  //     },
+  //   },
   image: {
     in: ["body"],
     isString: {
