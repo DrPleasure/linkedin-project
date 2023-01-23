@@ -16,7 +16,6 @@ postsRouter.post(
   async (req, res, next) => {
     try {
       const newPost = new PostsModel(req.body);
-      console.log("🚀 ~ file: index.js:19 ~ newPost ", newPost);
       // here it happens validation (thanks to Mongoose) of req.body, if it is not
       // ok Mongoose will throw an error
       // if it is ok the post is not saved yet
@@ -26,9 +25,8 @@ postsRouter.post(
         userId,
         { $push: { posts: newPost._id } },
         { new: true, runValidators: true }
-      );
+      ).populate("posts");
       if (updatedUser) {
-        console.log("🚀 ~ file: index.js:31 ~ updatedUser", updatedUser);
         const { _id } = await newPost.save();
 
         res.status(201).send({
