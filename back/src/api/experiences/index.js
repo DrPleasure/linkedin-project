@@ -4,7 +4,7 @@ import User from "../users/model.js"; // import database here
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-// import json2csv from 'json2csv';
+import json2csv from 'json2csv';
 import mongoose from "mongoose";
 
 const storage = multer.diskStorage({
@@ -175,37 +175,33 @@ router.post(
   }
 );
 
-router.get("/:userId/experiences/CSV", (req, res) => {
+router.get("/:userId/experiences/CSV", async (req, res) => {
   console.log("Request received for userId: ", req.params.userId);
-  User.findOne({ userId: req.params.userId })
-    .then((user) => {
-      if (!user) {
-        console.log("User not found for userId: ", req.params.userId);
-        return res.status(404).json({ message: "User not found" });
-      }
-      console.log("User found: ", user);
-      try {
-        const fields = [
-          "role",
-          "company",
-          "startDate",
-          "endDate",
-          "description",
-          "area",
-        ];
-        const opts = { fields };
-        const csv = json2csv.parse(user.experiences, opts);
-        res.attachment(`experiences-${req.params.userId}.csv`);
-        return res.status(200).send(csv);
-      } catch (err) {
-        console.log("Error generating CSV: ", err);
-        return res.status(500).json({ message: "Error generating CSV" });
-      }
-    })
-    .catch((err) => {
-      console.log("Error finding user: ", err);
-      res.status(500).send(err);
-    });
+  try {
+    const user = await User.findOne({ userId: req.params.userId.experiences });
+    if (!user) {
+      console.log("User not found for userId: ", req.params.userId);
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log("User found: ", user);
+    const fields = [
+      "role",
+      "company",
+      "startDate",
+      "endDate",
+      "description",
+      "area"
+    ];
+    const opts = { fields };
+    const csv = json2csv.parse(user.experiences, opts);
+    res.setHeader("Content-disposition", `attachment; filename=experiences-${req.params.userId}.csv`);
+    res.set("Content-Type", "text/csv");
+    res.status(200).send(csv);
+  } catch (err) {
+    console.log("Error generating CSV: ", err);
+    return res.status(500).json({ message: "Error generating CSV" });
+  }
 });
+
 
 export default router;
