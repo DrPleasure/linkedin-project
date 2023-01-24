@@ -19,33 +19,43 @@ const cloudinaryUploader = multer({
   storage: new CloudinaryStorage({
     cloudinary,
     params: {
-      folder: "LinkedinProject/users",
+      folder: "epicode/linkedInMedias/users",
     },
   }),
 }).single("profilePicture");
 
 // PICTURE upload
-pictureUploadRouter.post("/:userId/picture", cloudinaryUploader, async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    console.log("the req.file is: ", req.file);
-    const url = req.file.path;
+pictureUploadRouter.post(
+  "/:userId/picture",
+  cloudinaryUploader,
+  async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      console.log("the req.file is: ", req.file);
+      const url = req.file.path;
 
-    const updatedUser = await Users.findByIdAndUpdate(userId, { image: url }, { new: true, runValidators: true });
+      const updatedUser = await Users.findByIdAndUpdate(
+        userId,
+        { image: url },
+        { new: true, runValidators: true }
+      );
 
-    if (updatedUser) {
-      res.send({
-        message: `The user with id: ${userId} successfully updated; you can see it below`,
-        updatedUser: updatedUser,
-      });
-    } else {
-      next(NotFound(`The user with id: ${userId} is not in the Linkedin archive`));
+      if (updatedUser) {
+        res.send({
+          message: `The user with id: ${userId} successfully updated; you can see it below`,
+          updatedUser: updatedUser,
+        });
+      } else {
+        next(
+          NotFound(`The user with id: ${userId} is not in the Linkedin archive`)
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
-  } catch (error) {
-    console.log(error);
-    next(error);
   }
-});
+);
 
 // GET - PDF download
 pdfDownloadRouter.get("/:userId/cv", async (req, res, next) => {

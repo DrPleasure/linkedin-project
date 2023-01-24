@@ -134,7 +134,7 @@ const cloudinaryUploader = multer({
   storage: new CloudinaryStorage({
     cloudinary,
     params: {
-      folder: "epicode/linkedInMedias",
+      folder: "epicode/linkedInMedias/posts",
     },
   }),
 }).single("postImage");
@@ -163,109 +163,128 @@ postsRouter.post("/:postId", cloudinaryUploader, async (req, res, next) => {
 
 postsRouter.put("/:postId/like", async (req, res, next) => {
   try {
-      const postId = req.params.postId;
-      const userId = req.body.userId;
-      // check if the post already has the user's like
-      const post = await PostsModel.findById(postId);
-      if(post.likes.includes(userId)){
-        // if the user has already liked the post, remove the like
-        const updatedPost = await PostsModel.findOneAndUpdate(
-          { _id: postId },
-          { $pull: { likes: userId } },
-          { new: true, runValidators: true }
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    // check if the post already has the user's like
+    const post = await PostsModel.findById(postId);
+    if (post.likes.includes(userId)) {
+      // if the user has already liked the post, remove the like
+      const updatedPost = await PostsModel.findOneAndUpdate(
+        { _id: postId },
+        { $pull: { likes: userId } },
+        { new: true, runValidators: true }
+      );
+      // remove the post from the user's likedPosts
+      const updatedUser = await UsersModel.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { likedPosts: postId } },
+        { new: true, runValidators: true }
+      );
+      if (updatedPost && updatedUser) {
+        console.log(
+          "Post and User updated successfully",
+          updatedPost,
+          updatedUser
         );
-        // remove the post from the user's likedPosts
-        const updatedUser = await UsersModel.findOneAndUpdate(
-          { _id: userId },
-          { $pull: { likedPosts: postId } },
-          { new: true, runValidators: true }
-        );
-        if (updatedPost && updatedUser) {
-            console.log("Post and User updated successfully", updatedPost, updatedUser);
-            res.status(200).send({ message: "Like removed successfully", updatedPost });
-        } else {
-            next(createHttpError(404, "Post or User not found"));
-        }
-      }else{
-        //update the post
-        const updatedPost = await PostsModel.findOneAndUpdate(
-            { _id: postId },
-            { $addToSet: { likes: userId } },
-            { new: true, runValidators: true }
-        );
-        //update the user
-        const updatedUser = await UsersModel.findOneAndUpdate(
-            { _id: userId },
-            { $push: { likedPosts: postId } },
-            { new: true, runValidators: true }
-        );
-        //check if the update was successful
-        if (updatedPost && updatedUser) {
-            console.log("Post and User updated successfully", updatedPost, updatedUser);
-            res.status(200).send({ message: "Post liked successfully", updatedPost });
-        } else {
-            next(createHttpError(404, "Post or User not found"));
-        }
+        res
+          .status(200)
+          .send({ message: "Like removed successfully", updatedPost });
+      } else {
+        next(createHttpError(404, "Post or User not found"));
       }
+    } else {
+      //update the post
+      const updatedPost = await PostsModel.findOneAndUpdate(
+        { _id: postId },
+        { $addToSet: { likes: userId } },
+        { new: true, runValidators: true }
+      );
+      //update the user
+      const updatedUser = await UsersModel.findOneAndUpdate(
+        { _id: userId },
+        { $push: { likedPosts: postId } },
+        { new: true, runValidators: true }
+      );
+      //check if the update was successful
+      if (updatedPost && updatedUser) {
+        console.log(
+          "Post and User updated successfully",
+          updatedPost,
+          updatedUser
+        );
+        res
+          .status(200)
+          .send({ message: "Post liked successfully", updatedPost });
+      } else {
+        next(createHttpError(404, "Post or User not found"));
+      }
+    }
   } catch (error) {
-      next(error);
+    next(error);
   }
 });
 
-
-
 postsRouter.put("/:postId/dislike", async (req, res, next) => {
   try {
-      const postId = req.params.postId;
-      const userId = req.body.userId;
-      // check if the post already has the user's dislike
-      const post = await PostsModel.findById(postId);
-      if(post.dislikes.includes(userId)){
-        // if the user has already disliked the post, remove the dislike
-        const updatedPost = await PostsModel.findOneAndUpdate(
-          { _id: postId },
-          { $pull: { dislikes: userId } },
-          { new: true, runValidators: true }
-          );
-          // remove the post from the user's dislikedPosts
-          const updatedUser = await UsersModel.findOneAndUpdate(
-          { _id: userId },
-          {$pull: { dislikedPosts: postId } },
-          { new: true, runValidators: true }
-          );
-          if (updatedPost && updatedUser) {
-          console.log("Post and User updated successfully", updatedPost, updatedUser);
-          res.status(200).send({ message: "Dislike removed successfully", updatedPost });
-          } else {
-          next(createHttpError(404, "Post or User not found"));
-          }
-          }else{
-          //update the post
-          const updatedPost = await PostsModel.findOneAndUpdate(
-          { _id: postId },
-          { $addToSet: { dislikes: userId } },
-          { new: true, runValidators: true }
-          );
-          //update the user
-          const updatedUser = await UsersModel.findOneAndUpdate(
-          { _id: userId },
-          { $push: { dislikedPosts: postId } },
-          { new: true, runValidators: true }
-          );
-          //check if the update was successful
-          if (updatedPost && updatedUser) {
-          console.log("Post and User updated successfully", updatedPost, updatedUser);
-          res.status(200).send({ message: "Post disliked successfully", updatedPost });
-          } else {
-          next(createHttpError(404, "Post or User not found"));
-          }
-          }
-          } catch (error) {
-          next(error);
-          }
-          });
-
-
-
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    // check if the post already has the user's dislike
+    const post = await PostsModel.findById(postId);
+    if (post.dislikes.includes(userId)) {
+      // if the user has already disliked the post, remove the dislike
+      const updatedPost = await PostsModel.findOneAndUpdate(
+        { _id: postId },
+        { $pull: { dislikes: userId } },
+        { new: true, runValidators: true }
+      );
+      // remove the post from the user's dislikedPosts
+      const updatedUser = await UsersModel.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { dislikedPosts: postId } },
+        { new: true, runValidators: true }
+      );
+      if (updatedPost && updatedUser) {
+        console.log(
+          "Post and User updated successfully",
+          updatedPost,
+          updatedUser
+        );
+        res
+          .status(200)
+          .send({ message: "Dislike removed successfully", updatedPost });
+      } else {
+        next(createHttpError(404, "Post or User not found"));
+      }
+    } else {
+      //update the post
+      const updatedPost = await PostsModel.findOneAndUpdate(
+        { _id: postId },
+        { $addToSet: { dislikes: userId } },
+        { new: true, runValidators: true }
+      );
+      //update the user
+      const updatedUser = await UsersModel.findOneAndUpdate(
+        { _id: userId },
+        { $push: { dislikedPosts: postId } },
+        { new: true, runValidators: true }
+      );
+      //check if the update was successful
+      if (updatedPost && updatedUser) {
+        console.log(
+          "Post and User updated successfully",
+          updatedPost,
+          updatedUser
+        );
+        res
+          .status(200)
+          .send({ message: "Post disliked successfully", updatedPost });
+      } else {
+        next(createHttpError(404, "Post or User not found"));
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default postsRouter;

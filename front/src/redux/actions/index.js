@@ -36,12 +36,6 @@ const baseEndPoint = "http://localhost:3001/users/";
 const getOptions = {
   method: "GET",
 };
-const putOptions = {
-  method: "PUT",
-};
-const deleteOptions = {
-  method: "DELETE",
-};
 
 // action to get the info of users from the api
 
@@ -202,14 +196,12 @@ export const changeProfileDetailsAction = (details, id) => {
 //POST method for experience modal
 
 export const addExperienceAction = (experience, userId) => {
-  const postUrl = `https://striveschool-api.herokuapp.com/api/profile/:${userId}/experiences`;
+  const postUrl = `http://localhost:3001/users/${userId}/experiences`;
   return async (dispatch) => {
     const optionsPost = {
       method: "POST",
       body: JSON.stringify(experience),
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk2ZjAxM2M5NmRmYjAwMTUyMWE1YmEiLCJpYXQiOjE2NzA4MzYyNDMsImV4cCI6MTY3MjA0NTg0M30.y7kED45MhN6V7jWF7PwyZ4DryRe6OJ6b9-so68M-zaE",
         "Content-Type": "application/json",
       },
     };
@@ -242,14 +234,10 @@ export const otherUserProfileAction = (user) => {
 //DELETE experience action
 
 export const deleteExperienceAction = (userId, expId) => {
-  const deleteExperienceUrl = `https://striveschool-api.herokuapp.com/api/profile/${userId}/experiences/${expId}`;
+  const deleteExperienceUrl = `http://localhost:3001/users/${userId}/experiences/${expId}`;
 
   const deleteOptions = {
     method: "DELETE",
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk2ZjAxM2M5NmRmYjAwMTUyMWE1YmEiLCJpYXQiOjE2NzA4MzYyNDMsImV4cCI6MTY3MjA0NTg0M30.y7kED45MhN6V7jWF7PwyZ4DryRe6OJ6b9-so68M-zaE",
-    },
   };
   console.log("deleteding experience - DELETE method");
   return async (dispatch) => {
@@ -344,14 +332,12 @@ export const getSingleExpAction = (exp) => {
 //action for PUT method on single experience
 
 export const editExperienceAction = (updatedExperience, userId, expId) => {
-  const putUrl = `https://striveschool-api.herokuapp.com/api/profile/${userId}/experiences/${expId}`;
+  const putUrl = `http://localhost:3001/users/${userId}/experiences/${expId}`;
   return async (dispatch) => {
     const optionsPut = {
       method: "PUT",
       body: JSON.stringify(updatedExperience),
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk2ZjAxM2M5NmRmYjAwMTUyMWE1YmEiLCJpYXQiOjE2NzA4MzYyNDMsImV4cCI6MTY3MjA0NTg0M30.y7kED45MhN6V7jWF7PwyZ4DryRe6OJ6b9-so68M-zaE",
         "Content-Type": "application/json",
       },
     };
@@ -365,7 +351,7 @@ export const editExperienceAction = (updatedExperience, userId, expId) => {
         });
       } else {
         console.log(
-          "sorry, an error occured while trying to edd a new experience"
+          "sorry, an error occured while trying to add a new experience"
         );
       }
     } catch (error) {
