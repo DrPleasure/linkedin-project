@@ -11,7 +11,7 @@ const usersSchema = new Schema(
     bio: { type: String, required: true },
     title: { type: String, required: true },
     area: { type: String, required: true },
-    image: { type: String },
+    image: { type: String, required: true },
     experiences: [
       {
         role: { type: String, required: true },
@@ -24,6 +24,7 @@ const usersSchema = new Schema(
       },
     ],
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   {
     timestamps: true, // this option automatically the createdAt and updatedAt fields

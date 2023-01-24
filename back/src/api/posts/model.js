@@ -8,6 +8,7 @@ const postsSchema = new Schema(
     username: { type: String },
     image: { type: String },
     user: { type: Schema.Types.ObjectId, ref: "User" },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   {
     timestamps: true, // this option automatically the createdAt and updatedAt fields
