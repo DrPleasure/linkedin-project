@@ -120,9 +120,9 @@ const ExperienceComponent = ({ profileData }) => {
                       <ExperienceModal />
                       <div className="d-flex">
                         <div className="mr-2">
-                          <Icon.Calendar2Date />
+                          <Icon.CloudDownloadFill />
                         </div>
-                        <div>Add career break</div>
+                        <div>Download as CSV</div>
                       </div>
                     </div>
                   </div>
