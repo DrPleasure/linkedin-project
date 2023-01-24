@@ -14,13 +14,13 @@ const postSchema = {
   //       errorMessage: "Username is a mandatory field and needs to be a String.",
   //     },
   //   },
-  image: {
-    in: ["body"],
-    isString: {
-      errorMessage:
-        "Image is a mandatory field and needs to be a URL as a String.",
-    },
-  },
+  // image: {
+  //   in: ["body"],
+  //   isString: {
+  //     errorMessage:
+  //       "Image is a mandatory field and needs to be a URL as a String.",
+  //   },
+  // },
   user: {
     in: ["body"],
     isString: {

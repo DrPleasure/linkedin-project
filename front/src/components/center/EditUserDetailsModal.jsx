@@ -61,7 +61,7 @@ function EditUserDetailsModal() {
       payload: changedDetails,
     });
 
-    dispatch(changeProfileDetailsAction(changedDetails));
+    dispatch(changeProfileDetailsAction(changedDetails, details._id));
     handleClose();
 
     if (imageUploaded === true) {
