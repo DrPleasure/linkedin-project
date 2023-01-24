@@ -1,11 +1,12 @@
 import express from "express";
 const router = express.Router();
-import User from "../users/model.js"; // import database here
+import Users from "../users/model.js"; // import database here
 import multer from "multer";
 import path from "path";
 import fs from "fs";
 import json2csv from 'json2csv';
 import mongoose from "mongoose";
+import { Parser } from "@json2csv/plainjs"
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -23,7 +24,7 @@ const upload = multer({ storage });
 
 // Get user experiences
 router.get("/:userId/experiences", (req, res) => {
-  User.findById(req.params.userId)
+  Users.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -37,7 +38,7 @@ router.get("/:userId/experiences", (req, res) => {
 
 // Create an experience
 router.post("/:userId/experiences", (req, res) => {
-  User.findById(req.params.userId)
+  Users.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -70,7 +71,7 @@ router.post("/:userId/experiences", (req, res) => {
 
 // Get a specific experience
 router.get("/:userId/experiences/:expId", (req, res) => {
-  User.findById(req.params.userId)
+  Users.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -88,7 +89,7 @@ router.get("/:userId/experiences/:expId", (req, res) => {
 
 // Edit a specific experience
 router.put("/:userId/experiences/:expId", (req, res) => {
-  User.findById(req.params.userId)
+  Users.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -121,7 +122,7 @@ router.put("/:userId/experiences/:expId", (req, res) => {
 
 // Delete a specific experience
 router.delete("/:userId/experiences/:expId", (req, res) => {
-  User.findById(req.params.userId)
+  Users.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -150,7 +151,7 @@ router.post(
   "/:userId/experiences/:expId/picture",
   upload.single("experiencePicture"),
   (req, res) => {
-    User.findOne({ userId: req.params.userId })
+    Users.findOne({ userId: req.params.userId })
       .then((user) => {
         if (!user) {
           return res.status(404).json({ message: "User not found" });
@@ -175,33 +176,28 @@ router.post(
   }
 );
 
-router.get("/:userId/experiences/CSV", async (req, res) => {
-  console.log("Request received for userId: ", req.params.userId);
+router.get("/:userId/experiences/all/csv", async (req, res, next) => {
   try {
-    const user = await User.findOne({ userId: req.params.userId });
-    if (!user) {
-      console.log("User not found for userId: ", req.params.userId);
-      return res.status(404).json({ message: "User not found" });
+    const user = await Users.findById(req.params.userId)
+    console.log(user)
+    if (user) {
+      const myData = user.experiences
+      console.log(myData)
+      const opts = {
+        fields: ["role", "company", "startDate"]
+      }
+      const parser = await new Parser(opts)
+      const csv = parser.parse(myData)
+      console.log(csv)
+      res.setHeader("Content-Disposition", "attachment; filename=experiences.csv")
+      res.send(csv)
+    } else {
+      res.send({ message: "user not found" })
     }
-    console.log("User found: ", user);
-    const fields = [
-      "role",
-      "company",
-      "startDate",
-      "endDate",
-      "description",
-      "area"
-    ];
-    const opts = { fields };
-    const csv = json2csv.parse(user.experiences, opts);
-    res.setHeader("Content-disposition", `attachment; filename=experiences-${req.params.userId}.csv`);
-    res.set("Content-Type", "text/csv");
-    res.status(200).send(csv);
   } catch (err) {
-    console.log("Error generating CSV: ", err);
-    return res.status(500).json({ message: "Error generating CSV" });
+    console.error(err)
   }
-});
+})
 
 
 export default router;

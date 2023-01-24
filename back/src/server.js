@@ -9,6 +9,7 @@ import experiencesRouter from "./api/experiences/index.js";
 import { badRequestHandler, notFoundHandler, genericErrorHandler } from "./errorHandlers.js";
 
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
 
 const { PORT, MONGO_URL, FE_PROD_URL, FE_DEV_URL } = process.env;
 const server = express();
@@ -40,6 +41,8 @@ const corsOpts = {
 };
 
 server.use(cors(corsOpts));
+
+server.use(bodyParser.json())
 
 server.use(express.json());
 server.use("/users", usersRouter);
