@@ -15,6 +15,7 @@ router.post("/:userId/:postId/comments", async (req, res, next) => {
     const { userId, postId } = req.params;
 
     const newComment = new Comments(req.body);
+
     const selectedUser = await Users.findById(userId);
 
     if (selectedUser) {
@@ -22,9 +23,20 @@ router.post("/:userId/:postId/comments", async (req, res, next) => {
         postId,
         { $push: { comments: newComment._id } },
         { new: true, runValidators: true }
-      ).populate("comments");
+      );
 
-      res.send(selectedPost);
+      if (selectedPost) {
+        const updatedUser = await Users.findByIdAndUpdate(
+          userId,
+          { $push: { comments: newComment._id } },
+          { new: true, runValidators: true }
+        );
+
+        const { _id } = await newComment.save();
+        res.send(newComment);
+      } else {
+        next(NotFound(`Post with id: ${postId} not found`));
+      }
     } else {
       next(
         NotFound(
