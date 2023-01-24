@@ -18,6 +18,7 @@ export default function WritePostModal() {
 
   const [newFeedPost, setNewFeedPost] = useState({
     text: "",
+    user: `${details._id}`,
   });
 
   // the basic structure of the post
@@ -38,7 +39,7 @@ export default function WritePostModal() {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log(newFeedPost.text);
+    console.log(newFeedPost);
     dispatch(hideAddPostModalAction());
     dispatch(addingNewFeedPostAction(newFeedPost));
     dispatch(getFeedPostsAction());

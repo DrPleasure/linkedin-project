@@ -51,7 +51,7 @@ function EditAboutModal() {
       },
     });
 
-    dispatch(changeProfileDetailsAction(changedDetails));
+    dispatch(changeProfileDetailsAction(changedDetails, details._id));
     handleClose();
   };
 

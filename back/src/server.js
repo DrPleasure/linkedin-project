@@ -2,11 +2,18 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import usersRouter from "./api/users/index.js";
-import { pictureUploadRouter, pdfDownloadRouter } from "./api/users/files/index.js";
+import {
+  pictureUploadRouter,
+  pdfDownloadRouter,
+} from "./api/users/files/index.js";
 import postsRouter from "./api/posts/index.js";
 import router from "./api/experiences/index.js";
 import experiencesRouter from "./api/experiences/index.js";
-import { badRequestHandler, notFoundHandler, genericErrorHandler } from "./errorHandlers.js";
+import {
+  badRequestHandler,
+  notFoundHandler,
+  genericErrorHandler,
+} from "./errorHandlers.js";
 
 import mongoose from "mongoose";
 
@@ -34,7 +41,9 @@ const corsOpts = {
       corsNext(null, true);
     } else {
       // If it is not --> error
-      corsNext(createHttpError(400, `Origin ${origin} is not in the whitelist!`));
+      corsNext(
+        createHttpError(400, `Origin ${origin} is not in the whitelist!`)
+      );
     }
   },
 };
@@ -45,7 +54,7 @@ server.use(express.json());
 server.use("/users", usersRouter);
 server.use("/users", pictureUploadRouter);
 server.use("/users", pdfDownloadRouter);
-server.use("/", router);
+server.use("/users", router);
 server.use("/posts", postsRouter);
 
 server.use(badRequestHandler);
