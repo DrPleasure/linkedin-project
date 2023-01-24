@@ -4,7 +4,7 @@ import User from "../users/model.js"; // import database here
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import json2csv from 'json2csv';
+import json2csv from "json2csv";
 import mongoose from "mongoose";
 
 const storage = multer.diskStorage({
@@ -12,10 +12,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -55,9 +52,7 @@ router.post("/:userId/experiences", (req, res) => {
       user
         .save()
         .then((updatedUser) => {
-          res
-            .status(201)
-            .json(updatedUser.experiences[updatedUser.experiences.length - 1]);
+          res.status(201).json(updatedUser.experiences[updatedUser.experiences.length - 1]);
         })
         .catch((err) => {
           res.status(500).send(err);
@@ -97,14 +92,18 @@ router.put("/:userId/experiences/:expId", (req, res) => {
       if (!experience) {
         return res.status(404).json({ message: "Experience not found" });
       }
-      experience.role = req.body.role;
-      experience.company = req.body.company;
-      experience.startDate = req.body.startDate;
-      experience.endDate = req.body.endDate;
+      // console.log("experience", experience);
+      // experience = { ...req.body, updatedAt: new Date() };
+      // console.log("experience", experience);
+
       experience.area = req.body.area;
       experience.description = req.body.description;
       experience.image = req.body.image;
       // add other fields as required
+      // console.log("experince.role", experience.role);
+      // console.log("experince.image", experience.image);
+      // console.log("user", user);
+
       user
         .save()
         .then((updatedUser) => {
@@ -146,34 +145,30 @@ router.delete("/:userId/experiences/:expId", (req, res) => {
 });
 
 // Change the experience picture
-router.post(
-  "/:userId/experiences/:expId/picture",
-  upload.single("experiencePicture"),
-  (req, res) => {
-    User.findOne({ userId: req.params.userId })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).json({ message: "User not found" });
-        }
-        const experience = user.experiences.id(req.params.expId);
-        if (!experience) {
-          return res.status(404).json({ message: "Experience not found" });
-        }
-        experience.image = req.file.path;
-        user
-          .save()
-          .then(() => {
-            res.status(204).end();
-          })
-          .catch((err) => {
-            res.status(500).send(err);
-          });
-      })
-      .catch((err) => {
-        res.status(500).send(err);
-      });
-  }
-);
+router.post("/:userId/experiences/:expId/picture", upload.single("experiencePicture"), (req, res) => {
+  User.findOne({ userId: req.params.userId })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const experience = user.experiences.id(req.params.expId);
+      if (!experience) {
+        return res.status(404).json({ message: "Experience not found" });
+      }
+      experience.image = req.file.path;
+      user
+        .save()
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch((err) => {
+          res.status(500).send(err);
+        });
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
 
 router.get("/:userId/experiences/CSV", async (req, res) => {
   console.log("Request received for userId: ", req.params.userId);
@@ -184,14 +179,7 @@ router.get("/:userId/experiences/CSV", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     console.log("User found: ", user);
-    const fields = [
-      "role",
-      "company",
-      "startDate",
-      "endDate",
-      "description",
-      "area"
-    ];
+    const fields = ["role", "company", "startDate", "endDate", "description", "area"];
     const opts = { fields };
     const csv = json2csv.parse(user.experiences, opts);
     res.setHeader("Content-disposition", `attachment; filename=experiences-${req.params.userId}.csv`);
@@ -202,6 +190,5 @@ router.get("/:userId/experiences/CSV", async (req, res) => {
     return res.status(500).json({ message: "Error generating CSV" });
   }
 });
-
 
 export default router;

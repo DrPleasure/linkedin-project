@@ -48,7 +48,7 @@ server.use("/users", pictureUploadRouter);
 server.use("/users", pdfDownloadRouter);
 server.use("/users", csvRouter);
 server.use("/users", commentsRouter);
-server.use("/", router);
+server.use("/users", router);
 server.use("/posts", postsRouter);
 
 server.use(badRequestHandler);
