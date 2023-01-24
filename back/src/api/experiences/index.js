@@ -178,7 +178,7 @@ router.post(
 router.get("/:userId/experiences/CSV", async (req, res) => {
   console.log("Request received for userId: ", req.params.userId);
   try {
-    const user = await User.findOne({ userId: req.params.userId.experiences });
+    const user = await User.findOne({ userId: req.params.userId });
     if (!user) {
       console.log("User not found for userId: ", req.params.userId);
       return res.status(404).json({ message: "User not found" });
