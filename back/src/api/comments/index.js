@@ -125,4 +125,111 @@ router.get("/:userId/:postId/comments/:commentId", async (req, res, next) => {
   }
 });
 
+// PUT - single comment
+router.put("/:userId/:postId/comments/:commentId", async (req, res, next) => {
+  try {
+    const { userId, postId, commentId } = req.params;
+
+    const selectedUser = await Users.findById(userId);
+
+    if (selectedUser) {
+      const selectedPost = await Posts.findById(postId);
+
+      if (selectedPost) {
+        const selectedPostComments = selectedPost.comments;
+        const selectedComment = selectedPostComments.find((comment) => comment._id.toString() === commentId);
+
+        const searchedComment = await Comments.findByIdAndUpdate(selectedComment, req.body, {
+          new: true,
+          runValidators: true,
+        });
+
+        console.log("selectedComment", searchedComment);
+        if (searchedComment) {
+          res.send({
+            message: `Below you can find the comment with id: ${commentId}:`,
+            searchedComment: searchedComment,
+          });
+        } else {
+          next(NotFound(`The comment with id: ${commentId} is not in our linkedin database`));
+        }
+        console.log("selected post comments: ", selectedPostComments);
+      } else {
+        next(NotFound(`The post with id: ${postId} is not in our linkedin database`));
+      }
+    } else {
+      next(NotFound(`The user with id: ${userId} is not in our linkedin database`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// // DELETE - single comment
+// router.delete("/:userId/:postId/comments/:commentId", async (req, res, next) => {
+//   try {
+//     const { userId, postId, commentId } = req.params;
+
+//     const selectedUser = await Users.findById(userId);
+
+//     if (selectedUser) {
+//       const selectedPost = await Posts.findById(postId);
+
+//       if (selectedPost) {
+//         const selectedPostComments = selectedPost.comments;
+//         const selectedCommentId = selectedPostComments.find((comment) => comment._id.toString() === commentId);
+//         const deletedComment = await Comments.findByIdAndDelete(selectedCommentId);
+
+//         console.log("selectedPostComments", selectedPostComments);
+//         if (deletedComment) {
+//           res.send({
+//             message: `Below you can find the deleted comment with id: ${commentId} and all the remaining comments:`,
+//             deletedComment: deletedComment,
+//           });
+//         } else {
+//           next(NotFound(`The comment with id: ${commentId} is not in our linkedin database`));
+//         }
+//         console.log("selected post comments: ", selectedPostComments);
+//       } else {
+//         next(NotFound(`The post with id: ${postId} is not in our linkedin database`));
+//       }
+//     } else {
+//       next(NotFound(`The user with id: ${userId} is not in our linkedin database`));
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// DELETE - single comment
+router.delete("/:userId/:postId/comments/:commentId", async (req, res, next) => {
+  try {
+    const { userId, postId, commentId } = req.params;
+
+    const selectedUser = await Users.findByIdAndUpdate(userId, { $pull: { comments: { _id: commentId } } });
+
+    if (selectedUser) {
+      const selectedPost = await Posts.findByIdAndUpdate(postId, { $pull: { comments: { _id: commentId } } });
+
+      if (selectedPost) {
+        const deletedComment = await Comments.findByIdAndDelete(commentId);
+
+        if (deletedComment) {
+          res.send({
+            message: `Below you can find the deleted comment with id: ${commentId} and all the remaining comments:`,
+            deletedComment: deletedComment,
+          });
+        } else {
+          next(NotFound(`The comment with id: ${commentId} is not in our linkedin database`));
+        }
+      } else {
+        next(NotFound(`The post with id: ${postId} is not in our linkedin database`));
+      }
+    } else {
+      next(NotFound(`The user with id: ${userId} is not in our linkedin database`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 export default router;
