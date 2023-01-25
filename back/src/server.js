@@ -29,6 +29,7 @@ Cross-Origin Requests:
 
 // ***************************************************************
 
+
 const whitelist = [FE_DEV_URL, FE_PROD_URL];
 
 const corsOpts = {
@@ -68,6 +69,8 @@ mongoose.connection.on("connected", () => {
   console.log("Successfully connected to Mongo!");
   server.listen(PORT, () => {
     console.table(listEndpoints(server));
+    console.log(FE_DEV_URL)
+
     console.log(`Server is running on port ${PORT}`);
   });
 });
