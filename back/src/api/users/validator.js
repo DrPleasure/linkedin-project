@@ -82,6 +82,12 @@ const userSchema = {
       errorMessage: "Area is a mandatory field. Please supply a area which is a string.",
     },
   },
+  image: {
+    in: ["body"],
+    isString: {
+      errorMessage: "Image is a mandatory field. Please supply an image link, which is a string.",
+    },
+  },
 };
 
 const filteredUserSchema = {

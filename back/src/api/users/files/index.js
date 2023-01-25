@@ -14,6 +14,7 @@ const { NotFound } = createHttpError;
 
 export const pictureUploadRouter = express.Router();
 export const pdfDownloadRouter = express.Router();
+export const csvRouter = express.Router();
 
 const cloudinaryUploader = multer({
   storage: new CloudinaryStorage({
@@ -77,6 +78,24 @@ pdfDownloadRouter.get("/:userId/cv", async (req, res, next) => {
     } else {
       console.log(`There is no user with this id: ${userId}`);
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// CSV
+//
+csvRouter.get("/postsCSV", (req, res, next) => {
+  try {
+    res.setHeader("Content-Disposition", "attachment; filename=posts.csv");
+
+    const source = getPostsJSONReadableStream();
+    const transform = new json2csv.Transform({ fields: ["category", "title", "content"] });
+    const destination = res;
+
+    pipeline(source, transform, destination, (err) => {
+      if (err) console.log(err);
+    });
   } catch (error) {
     next(error);
   }

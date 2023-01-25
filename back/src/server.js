@@ -2,10 +2,14 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import usersRouter from "./api/users/index.js";
+
+import commentsRouter from "./api/comments/index.js";
+
 import {
   pictureUploadRouter,
   pdfDownloadRouter,
 } from "./api/users/files/index.js";
+
 import postsRouter from "./api/posts/index.js";
 import router from "./api/experiences/index.js";
 import experiencesRouter from "./api/experiences/index.js";
@@ -57,6 +61,9 @@ server.use(express.json());
 server.use("/users", usersRouter);
 server.use("/users", pictureUploadRouter);
 server.use("/users", pdfDownloadRouter);
+
+server.use("/users", commentsRouter);
+
 server.use("/users", router);
 server.use("/posts", postsRouter);
 

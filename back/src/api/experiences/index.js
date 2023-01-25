@@ -4,7 +4,7 @@ import Users from "../users/model.js"; // import database here
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import json2csv from 'json2csv';
+import json2csv from "json2csv";
 import mongoose from "mongoose";
 import { Parser } from "@json2csv/plainjs"
 
@@ -13,10 +13,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -56,9 +53,7 @@ router.post("/:userId/experiences", (req, res) => {
       user
         .save()
         .then((updatedUser) => {
-          res
-            .status(201)
-            .json(updatedUser.experiences[updatedUser.experiences.length - 1]);
+          res.status(201).json(updatedUser.experiences[updatedUser.experiences.length - 1]);
         })
         .catch((err) => {
           res.status(500).send(err);
@@ -98,14 +93,18 @@ router.put("/:userId/experiences/:expId", (req, res) => {
       if (!experience) {
         return res.status(404).json({ message: "Experience not found" });
       }
-      experience.role = req.body.role;
-      experience.company = req.body.company;
-      experience.startDate = req.body.startDate;
-      experience.endDate = req.body.endDate;
+      // console.log("experience", experience);
+      // experience = { ...req.body, updatedAt: new Date() };
+      // console.log("experience", experience);
+
       experience.area = req.body.area;
       experience.description = req.body.description;
       experience.image = req.body.image;
       // add other fields as required
+      // console.log("experince.role", experience.role);
+      // console.log("experince.image", experience.image);
+      // console.log("user", user);
+
       user
         .save()
         .then((updatedUser) => {
@@ -146,7 +145,7 @@ router.delete("/:userId/experiences/:expId", (req, res) => {
     });
 });
 
-// Change the experience picture
+
 router.post(
   "/:userId/experiences/:expId/picture",
   upload.single("experiencePicture"),
@@ -176,6 +175,7 @@ router.post(
   }
 );
 
+
 router.get("/:userId/experiences/all/csv", async (req, res, next) => {
   try {
     const user = await Users.findById(req.params.userId)
@@ -194,10 +194,10 @@ router.get("/:userId/experiences/all/csv", async (req, res, next) => {
     } else {
       res.send({ message: "user not found" })
     }
+
   } catch (err) {
     console.error(err)
   }
 })
-
 
 export default router;
