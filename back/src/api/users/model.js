@@ -27,9 +27,8 @@ const usersSchema = new Schema(
 
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 
-    likedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    dislikedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-
+    likes: [{ type: Schema.Types.ObjectId, ref: "Like" }],
+    // dislikedPosts: [{ type: Schema.Types.ObjectId, ref: "Dislikes" }],
   },
   {
     timestamps: true, // this option automatically the createdAt and updatedAt fields
