@@ -15,6 +15,7 @@ function EditUserDetailsModal() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const { BE_PROD_URL } = process.env;
   // Fetching variables
   let details = useSelector((state) => state.myProfile.detailsData);
   let isFetched = useSelector((state) => state.myProfile.isFetched);
@@ -88,7 +89,7 @@ function EditUserDetailsModal() {
 
     try {
       let res = await fetch(
-        `http://localhost:3001/users/${details._id}/picture`,
+        `${BE_PROD_URL}/users/${details._id}/picture`,
         optionsPost
       );
       console.log(res);

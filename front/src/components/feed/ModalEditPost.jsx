@@ -14,6 +14,8 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { ImEarth } from "react-icons/im";
 
 export default function ModalEditPost() {
+  const { BE_PROD_URL } = process.env;
+
   const dispatch = useDispatch();
   const showEditModal = useSelector(
     (state) => state.editPostModal.showEditModal
@@ -65,10 +67,7 @@ export default function ModalEditPost() {
     };
 
     try {
-      let res = await fetch(
-        `http://localhost:3001/posts/${postId}`,
-        optionsPost
-      );
+      let res = await fetch(`${BE_PROD_URL}/posts/${postId}`, optionsPost);
       console.log("sucessfully updated " + res);
       window.location.reload();
     } catch (error) {
