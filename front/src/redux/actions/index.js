@@ -31,7 +31,10 @@ export const HIDE_DELETE_MODAL = "HIDE_DELETE_MODAL";
 
 //constants to use for fetching data
 
-const baseEndPoint = "http://localhost:3001/users/";
+const { BE_PROD_URL } = process.env;
+
+// const baseEndPoint = "${BE_PROD_URL}/users/";
+const baseEndPoint = `${BE_PROD_URL}/users/`;
 
 const getOptions = {
   method: "GET",
@@ -93,7 +96,7 @@ export const hideUserSearchAction = () => {
 //action for getting the experiences
 
 export const getExperiencesAction = (userId) => {
-  const experiencesUrl = `http://localhost:3001/users/${userId}/experiences`;
+  const experiencesUrl = `${BE_PROD_URL}/users/${userId}/experiences`;
 
   return async (dispatch) => {
     try {
@@ -127,7 +130,7 @@ export const collapseMessengerAction = () => {
 
 // get My Profile Details Fetching Action
 
-const baseUrlMe = "http://localhost:3001/users/63ce6117d27ba46f82b30988";
+const baseUrlMe = `${BE_PROD_URL}/users/63ce6117d27ba46f82b30988`;
 
 export const getMyProfileDetailsAction = () => {
   return async (dispatch) => {
@@ -196,7 +199,7 @@ export const changeProfileDetailsAction = (details, id) => {
 //POST method for experience modal
 
 export const addExperienceAction = (experience, userId) => {
-  const postUrl = `http://localhost:3001/users/${userId}/experiences`;
+  const postUrl = `${BE_PROD_URL}/users/${userId}/experiences`;
   return async (dispatch) => {
     const optionsPost = {
       method: "POST",
@@ -234,7 +237,7 @@ export const otherUserProfileAction = (user) => {
 //DELETE experience action
 
 export const deleteExperienceAction = (userId, expId) => {
-  const deleteExperienceUrl = `http://localhost:3001/users/${userId}/experiences/${expId}`;
+  const deleteExperienceUrl = `${BE_PROD_URL}/users/${userId}/experiences/${expId}`;
 
   const deleteOptions = {
     method: "DELETE",
@@ -271,7 +274,7 @@ export const hideAddPostModalAction = () => {
 };
 
 // getting the posts for the feed
-const baseEndPointPosts = "http://localhost:3001/posts/";
+const baseEndPointPosts = `${BE_PROD_URL}/posts/`;
 
 export const getFeedPostsAction = () => {
   return async (dispatch) => {
@@ -332,7 +335,7 @@ export const getSingleExpAction = (exp) => {
 //action for PUT method on single experience
 
 export const editExperienceAction = (updatedExperience, userId, expId) => {
-  const putUrl = `http://localhost:3001/users/${userId}/experiences/${expId}`;
+  const putUrl = `${BE_PROD_URL}/users/${userId}/experiences/${expId}`;
   return async (dispatch) => {
     const optionsPut = {
       method: "PUT",
@@ -399,8 +402,6 @@ export const editMyFeedPostAction = (editFeedPost, postId) => {
       method: "PUT",
       body: JSON.stringify(editFeedPost),
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk2ZjAxM2M5NmRmYjAwMTUyMWE1YmEiLCJpYXQiOjE2NzA4MzYyNDMsImV4cCI6MTY3MjA0NTg0M30.y7kED45MhN6V7jWF7PwyZ4DryRe6OJ6b9-so68M-zaE",
         "Content-Type": "application/json",
       },
     };
@@ -429,8 +430,6 @@ export const deleteMyFeedPostAction = (deleteFeedPost, postId) => {
       method: "DELETE",
       body: JSON.stringify(deleteFeedPost),
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk2ZjAxM2M5NmRmYjAwMTUyMWE1YmEiLCJpYXQiOjE2NzA4MzYyNDMsImV4cCI6MTY3MjA0NTg0M30.y7kED45MhN6V7jWF7PwyZ4DryRe6OJ6b9-so68M-zaE",
         "Content-Type": "application/json",
       },
     };
@@ -471,7 +470,7 @@ export const hideShowAction = () => {
 //get a current user data based on id
 
 export const getCurrentUserAction = (userId) => {
-  const currentUserUrl = `https://striveschool-api.herokuapp.com/api/profile/${userId}`;
+  const currentUserUrl = `${BE_PROD_URL}/users/${userId}`;
   return async (dispatch) => {
     try {
       let response = await fetch(currentUserUrl, getOptions);
@@ -515,15 +514,11 @@ export const submitFileData = async (image, userId, expId) => {
   const optionsPost = {
     method: "POST",
     body: formData,
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk2ZjAxM2M5NmRmYjAwMTUyMWE1YmEiLCJpYXQiOjE2NzA4MzYyNDMsImV4cCI6MTY3MjA0NTg0M30.y7kED45MhN6V7jWF7PwyZ4DryRe6OJ6b9-so68M-zaE",
-    },
   };
 
   try {
     let res = await fetch(
-      `https://striveschool-api.herokuapp.com/api/profile/${userId}/experiences/${expId}/picture`,
+      `${BE_PROD_URL}/users/${userId}/experiences/${expId}/picture`,
       optionsPost
     );
     console.log(res);
