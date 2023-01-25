@@ -2,14 +2,25 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import usersRouter from "./api/users/index.js";
+
 import commentsRouter from "./api/comments/index.js";
-import { pictureUploadRouter, pdfDownloadRouter, csvRouter } from "./api/users/files/index.js";
+
+import {
+  pictureUploadRouter,
+  pdfDownloadRouter,
+} from "./api/users/files/index.js";
+
 import postsRouter from "./api/posts/index.js";
 import router from "./api/experiences/index.js";
 import experiencesRouter from "./api/experiences/index.js";
-import { badRequestHandler, notFoundHandler, genericErrorHandler } from "./errorHandlers.js";
+import {
+  badRequestHandler,
+  notFoundHandler,
+  genericErrorHandler,
+} from "./errorHandlers.js";
 
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
 
 const { PORT, MONGO_URL, FE_PROD_URL, FE_DEV_URL } = process.env;
 const server = express();
@@ -35,19 +46,24 @@ const corsOpts = {
       corsNext(null, true);
     } else {
       // If it is not --> error
-      corsNext(createHttpError(400, `Origin ${origin} is not in the whitelist!`));
+      corsNext(
+        createHttpError(400, `Origin ${origin} is not in the whitelist!`)
+      );
     }
   },
 };
 
 server.use(cors(corsOpts));
 
+server.use(bodyParser.json())
+
 server.use(express.json());
 server.use("/users", usersRouter);
 server.use("/users", pictureUploadRouter);
 server.use("/users", pdfDownloadRouter);
-server.use("/users", csvRouter);
+
 server.use("/users", commentsRouter);
+
 server.use("/users", router);
 server.use("/posts", postsRouter);
 
