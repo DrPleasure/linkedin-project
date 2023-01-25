@@ -48,7 +48,7 @@ server.use(express.json());
 server.use("/users", usersRouter);
 server.use("/users", pictureUploadRouter);
 server.use("/users", pdfDownloadRouter);
-server.use("/", router);
+server.use("/users", router);
 server.use("/posts", postsRouter);
 
 server.use(badRequestHandler);

@@ -94,10 +94,13 @@ router.put("/:userId/experiences/:expId", (req, res) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+      console.log("Experiences:", user.experiences)
       const experience = user.experiences.id(req.params.expId);
+      console.log("Experience:", experience)
       if (!experience) {
         return res.status(404).json({ message: "Experience not found" });
       }
+      username = req.body.username;
       experience.role = req.body.role;
       experience.company = req.body.company;
       experience.startDate = req.body.startDate;
@@ -105,6 +108,7 @@ router.put("/:userId/experiences/:expId", (req, res) => {
       experience.area = req.body.area;
       experience.description = req.body.description;
       experience.image = req.body.image;
+      experience.username = req.body.username;
       // add other fields as required
       user
         .save()
@@ -160,7 +164,7 @@ router.post(
         if (!experience) {
           return res.status(404).json({ message: "Experience not found" });
         }
-        experience.image = req.file.path;
+        experience.image = req.body.image;
         user
           .save()
           .then(() => {
