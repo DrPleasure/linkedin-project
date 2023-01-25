@@ -157,42 +157,6 @@ router.put("/:userId/:postId/likes/:likeId", async (req, res, next) => {
   }
 });
 
-// // DELETE - single comment
-// router.delete("/:userId/:postId/comments/:commentId", async (req, res, next) => {
-//   try {
-//     const { userId, postId, commentId } = req.params;
-
-//     const selectedUser = await Users.findById(userId);
-
-//     if (selectedUser) {
-//       const selectedPost = await Posts.findById(postId);
-
-//       if (selectedPost) {
-//         const selectedPostComments = selectedPost.comments;
-//         const selectedCommentId = selectedPostComments.find((comment) => comment._id.toString() === commentId);
-//         const deletedComment = await Comments.findByIdAndDelete(selectedCommentId);
-
-//         console.log("selectedPostComments", selectedPostComments);
-//         if (deletedComment) {
-//           res.send({
-//             message: `Below you can find the deleted comment with id: ${commentId} and all the remaining comments:`,
-//             deletedComment: deletedComment,
-//           });
-//         } else {
-//           next(NotFound(`The comment with id: ${commentId} is not in our linkedin database`));
-//         }
-//         console.log("selected post comments: ", selectedPostComments);
-//       } else {
-//         next(NotFound(`The post with id: ${postId} is not in our linkedin database`));
-//       }
-//     } else {
-//       next(NotFound(`The user with id: ${userId} is not in our linkedin database`));
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 // DELETE - single comment
 router.delete("/:userId/:postId/likes/:likeId", async (req, res, next) => {
   try {
