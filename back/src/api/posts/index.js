@@ -9,38 +9,33 @@ import { v2 as cloudinary } from "cloudinary";
 
 const postsRouter = express.Router();
 
-postsRouter.post(
-  "/",
-  checksPostSchema,
-  triggerBadRequest,
-  async (req, res, next) => {
-    try {
-      const newPost = new PostsModel(req.body);
-      // here it happens validation (thanks to Mongoose) of req.body, if it is not
-      // ok Mongoose will throw an error
-      // if it is ok the post is not saved yet
-      // 1. get the User with id: req.body.user
-      const userId = req.body.user;
-      const updatedUser = await UsersModel.findByIdAndUpdate(
-        userId,
-        { $push: { posts: newPost._id } },
-        { new: true, runValidators: true }
-      ).populate("posts");
-      if (updatedUser) {
-        const { _id } = await newPost.save();
+postsRouter.post("/", checksPostSchema, triggerBadRequest, async (req, res, next) => {
+  try {
+    const newPost = new PostsModel(req.body);
+    // here it happens validation (thanks to Mongoose) of req.body, if it is not
+    // ok Mongoose will throw an error
+    // if it is ok the post is not saved yet
+    // 1. get the User with id: req.body.user
+    const userId = req.body.user;
+    const updatedUser = await UsersModel.findByIdAndUpdate(
+      userId,
+      { $push: { posts: newPost._id } },
+      { new: true, runValidators: true }
+    ).populate("posts");
+    if (updatedUser) {
+      const { _id } = await newPost.save();
 
-        res.status(201).send({
-          message: `Post with ID: ${_id} created and user.posts with ID: ${userId} updated!`,
-          updatedUser: updatedUser,
-        });
-      } else {
-        next(createHttpError(404, `User with id ${userId} not found!`));
-      }
-    } catch (error) {
-      next(error);
+      res.status(201).send({
+        message: `Post with ID: ${_id} created and user.posts with ID: ${userId} updated!`,
+        newPost: newPost,
+      });
+    } else {
+      next(createHttpError(404, `User with id ${userId} not found!`));
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 postsRouter.get("/", async (req, res, next) => {
   try {
@@ -69,9 +64,7 @@ postsRouter.get("/:postId", async (req, res, next) => {
     if (post) {
       res.send(post);
     } else {
-      next(
-        createHttpError(404, `Post with id ${req.params.postId} not found!`)
-      );
+      next(createHttpError(404, `Post with id ${req.params.postId} not found!`));
     }
   } catch (error) {
     next(error);
@@ -90,9 +83,7 @@ postsRouter.put("/:postId", async (req, res, next) => {
     if (updatedPost) {
       res.send(updatedPost);
     } else {
-      next(
-        createHttpError(404, `Post with id ${req.params.postId} not found!`)
-      );
+      next(createHttpError(404, `Post with id ${req.params.postId} not found!`));
     }
   } catch (error) {
     next(error);
@@ -108,9 +99,7 @@ postsRouter.delete("/:postId", async (req, res, next) => {
       // finding the User
       const user = await UsersModel.findById(userId);
       // finding the index of the post which needs to be deleted
-      const indexToDelete = user.posts.findIndex(
-        (post) => post._id.toString() === req.params.postId
-      );
+      const indexToDelete = user.posts.findIndex((post) => post._id.toString() === req.params.postId);
       // deleting the post from user.posts
       user.posts.splice(indexToDelete, 1);
       // saving user
@@ -119,9 +108,7 @@ postsRouter.delete("/:postId", async (req, res, next) => {
         message: `Post with ID ${req.params.postId} was successfully deleted!`,
       });
     } else {
-      next(
-        createHttpError(404, `Post with id ${req.params.postId} not found!`)
-      );
+      next(createHttpError(404, `Post with id ${req.params.postId} not found!`));
     }
   } catch (error) {
     next(error);
@@ -152,9 +139,7 @@ postsRouter.post("/:postId", cloudinaryUploader, async (req, res, next) => {
     if (updatedPost) {
       res.send(updatedPost);
     } else {
-      next(
-        createHttpError(404, `Post with id ${req.params.postId} not found!`)
-      );
+      next(createHttpError(404, `Post with id ${req.params.postId} not found!`));
     }
   } catch (error) {
     next(error);
@@ -181,14 +166,8 @@ postsRouter.put("/:postId/like", async (req, res, next) => {
         { new: true, runValidators: true }
       );
       if (updatedPost && updatedUser) {
-        console.log(
-          "Post and User updated successfully",
-          updatedPost,
-          updatedUser
-        );
-        res
-          .status(200)
-          .send({ message: "Like removed successfully", updatedPost });
+        console.log("Post and User updated successfully", updatedPost, updatedUser);
+        res.status(200).send({ message: "Like removed successfully", updatedPost });
       } else {
         next(createHttpError(404, "Post or User not found"));
       }
@@ -207,14 +186,8 @@ postsRouter.put("/:postId/like", async (req, res, next) => {
       );
       //check if the update was successful
       if (updatedPost && updatedUser) {
-        console.log(
-          "Post and User updated successfully",
-          updatedPost,
-          updatedUser
-        );
-        res
-          .status(200)
-          .send({ message: "Post liked successfully", updatedPost });
+        console.log("Post and User updated successfully", updatedPost, updatedUser);
+        res.status(200).send({ message: "Post liked successfully", updatedPost });
       } else {
         next(createHttpError(404, "Post or User not found"));
       }
@@ -244,14 +217,8 @@ postsRouter.put("/:postId/dislike", async (req, res, next) => {
         { new: true, runValidators: true }
       );
       if (updatedPost && updatedUser) {
-        console.log(
-          "Post and User updated successfully",
-          updatedPost,
-          updatedUser
-        );
-        res
-          .status(200)
-          .send({ message: "Dislike removed successfully", updatedPost });
+        console.log("Post and User updated successfully", updatedPost, updatedUser);
+        res.status(200).send({ message: "Dislike removed successfully", updatedPost });
       } else {
         next(createHttpError(404, "Post or User not found"));
       }
@@ -270,14 +237,8 @@ postsRouter.put("/:postId/dislike", async (req, res, next) => {
       );
       //check if the update was successful
       if (updatedPost && updatedUser) {
-        console.log(
-          "Post and User updated successfully",
-          updatedPost,
-          updatedUser
-        );
-        res
-          .status(200)
-          .send({ message: "Post disliked successfully", updatedPost });
+        console.log("Post and User updated successfully", updatedPost, updatedUser);
+        res.status(200).send({ message: "Post disliked successfully", updatedPost });
       } else {
         next(createHttpError(404, "Post or User not found"));
       }
