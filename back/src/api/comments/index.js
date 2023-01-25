@@ -32,8 +32,9 @@ router.post("/:userId/:postId/comments", async (req, res, next) => {
           { new: true, runValidators: true }
         );
 
-        const { _id } = await newComment.save();
-        res.send(newComment);
+        //  const { _id } = await newComment.save();
+        const entireNewComment = await newComment.save();
+        res.send(entireNewComment);
       } else {
         next(NotFound(`Post with id: ${postId} not found`));
       }
@@ -206,17 +207,31 @@ router.delete("/:userId/:postId/comments/:commentId", async (req, res, next) => 
   try {
     const { userId, postId, commentId } = req.params;
 
-    const selectedUser = await Users.findByIdAndUpdate(userId, { $pull: { comments: { _id: commentId } } });
+    const selectedUser = await Users.findByIdAndUpdate(
+      userId,
+      { $pull: { comments: { _id: commentId } } },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     if (selectedUser) {
-      const selectedPost = await Posts.findByIdAndUpdate(postId, { $pull: { comments: { _id: commentId } } });
+      const selectedPost = await Posts.findByIdAndUpdate(
+        postId,
+        { $pull: { comments: { _id: commentId } } },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
 
       if (selectedPost) {
         const deletedComment = await Comments.findByIdAndDelete(commentId);
 
         if (deletedComment) {
           res.send({
-            message: `Below you can find the deleted comment with id: ${commentId} and all the remaining comments:`,
+            message: `Below you can find the successfully deleted comment with id: ${commentId}`,
             deletedComment: deletedComment,
           });
         } else {
