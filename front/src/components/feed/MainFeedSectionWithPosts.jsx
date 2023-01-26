@@ -79,7 +79,7 @@ export default function MainFeedSectionWithPosts() {
   useEffect(() => {
     dispatch(getFeedPostsAction());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allFeedPosts]);
+  }, []);
   return (
     <>
       {allFeedPosts && (
