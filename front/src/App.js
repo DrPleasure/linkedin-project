@@ -12,7 +12,10 @@ import Feed from "./components/feed/Feed";
 import SearchDisplay from "./components/global/SearchDisplay.jsx";
 import OtherUser from "./components/global/OtherUser";
 
+
+
 function App() {
+  
   let showSearchResults = useSelector((state) => state.showUsers.show);
   const dispatch = useDispatch();
   return (

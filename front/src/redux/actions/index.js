@@ -29,12 +29,14 @@ export const GET_CURRENT_USER_DATA = "GET_CURRENT_USER_DATA";
 export const SHOW_DELETE_MODAL = "SHOW_DELETE_MODAL";
 export const HIDE_DELETE_MODAL = "HIDE_DELETE_MODAL";
 
+
+
 //constants to use for fetching data
 
-const { BE_PROD_URL } = process.env;
+const REACT_APP_BE_PROD_URL  = process.env.REACT_APP_BE_PROD_URL;
 
-// const baseEndPoint = "${BE_PROD_URL}/users/";
-const baseEndPoint = `${BE_PROD_URL}/users/`;
+// const baseEndPoint = "${REACT_APP_BE_PROD_URL}/users/";
+const baseEndPoint = `${REACT_APP_BE_PROD_URL}/users/`;
 
 const getOptions = {
   method: "GET",
@@ -96,7 +98,7 @@ export const hideUserSearchAction = () => {
 //action for getting the experiences
 
 export const getExperiencesAction = (userId) => {
-  const experiencesUrl = `${BE_PROD_URL}/users/${userId}/experiences`;
+  const experiencesUrl = `${REACT_APP_BE_PROD_URL}/users/${userId}/experiences`;
 
   return async (dispatch) => {
     try {
@@ -130,7 +132,7 @@ export const collapseMessengerAction = () => {
 
 // get My Profile Details Fetching Action
 
-const baseUrlMe = `${BE_PROD_URL}/users/63ce6117d27ba46f82b30988`;
+const baseUrlMe = `${REACT_APP_BE_PROD_URL}/users/63ce6117d27ba46f82b30988`;
 
 export const getMyProfileDetailsAction = () => {
   return async (dispatch) => {
@@ -199,7 +201,7 @@ export const changeProfileDetailsAction = (details, id) => {
 //POST method for experience modal
 
 export const addExperienceAction = (experience, userId) => {
-  const postUrl = `${BE_PROD_URL}/users/${userId}/experiences`;
+  const postUrl = `${REACT_APP_BE_PROD_URL}/users/${userId}/experiences`;
   return async (dispatch) => {
     const optionsPost = {
       method: "POST",
@@ -237,7 +239,7 @@ export const otherUserProfileAction = (user) => {
 //DELETE experience action
 
 export const deleteExperienceAction = (userId, expId) => {
-  const deleteExperienceUrl = `${BE_PROD_URL}/users/${userId}/experiences/${expId}`;
+  const deleteExperienceUrl = `${REACT_APP_BE_PROD_URL}/users/${userId}/experiences/${expId}`;
 
   const deleteOptions = {
     method: "DELETE",
@@ -274,13 +276,14 @@ export const hideAddPostModalAction = () => {
 };
 
 // getting the posts for the feed
-const baseEndPointPosts = `${BE_PROD_URL}/posts/`;
+const baseEndPointPosts = `${process.env.REACT_APP_BE_PROD_URL}/posts/`;
 
 export const getFeedPostsAction = () => {
   return async (dispatch) => {
     console.log("----------------Fetching Feed Posts---------------------");
 
     try {
+      console.log(baseEndPointPosts)
       let resp = await fetch(baseEndPointPosts, getOptions);
       if (resp.ok) {
         let data = await resp.json();
@@ -306,6 +309,7 @@ export const addingNewFeedPostAction = (newFeedPost) => {
     console.log("----------------Adding New Feed Post---------------------");
 
     try {
+      console.log("BaseEndPointPosts:", baseEndPointPosts)
       let resp = await fetch(baseEndPointPosts, {
         method: "POST",
         body: JSON.stringify(newFeedPost),
@@ -335,7 +339,7 @@ export const getSingleExpAction = (exp) => {
 //action for PUT method on single experience
 
 export const editExperienceAction = (updatedExperience, userId, expId) => {
-  const putUrl = `${BE_PROD_URL}/users/${userId}/experiences/${expId}`;
+  const putUrl = `${REACT_APP_BE_PROD_URL}/users/${userId}/experiences/${expId}`;
   return async (dispatch) => {
     const optionsPut = {
       method: "PUT",
@@ -470,7 +474,7 @@ export const hideShowAction = () => {
 //get a current user data based on id
 
 export const getCurrentUserAction = (userId) => {
-  const currentUserUrl = `${BE_PROD_URL}/users/${userId}`;
+  const currentUserUrl = `${REACT_APP_BE_PROD_URL}/users/${userId}`;
   return async (dispatch) => {
     try {
       let response = await fetch(currentUserUrl, getOptions);
@@ -518,7 +522,7 @@ export const submitFileData = async (image, userId, expId) => {
 
   try {
     let res = await fetch(
-      `${BE_PROD_URL}/users/${userId}/experiences/${expId}/picture`,
+      `${REACT_APP_BE_PROD_URL}/users/${userId}/experiences/${expId}/picture`,
       optionsPost
     );
     console.log(res);
