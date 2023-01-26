@@ -5,11 +5,10 @@ const { Schema, model } = mongoose;
 const postsSchema = new Schema(
   {
     text: { type: String, required: true },
-    username: { type: String },
     image: { type: String },
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    dislikes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    likes: [{ type: Schema.Types.ObjectId, ref: "Like" }],
   },
   {
     timestamps: true, // this option automatically the createdAt and updatedAt fields
