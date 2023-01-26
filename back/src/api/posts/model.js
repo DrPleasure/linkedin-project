@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
-
+//just a comment
 const postsSchema = new Schema(
   {
     text: { type: String, required: true },
