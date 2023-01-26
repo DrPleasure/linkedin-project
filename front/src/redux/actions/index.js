@@ -276,7 +276,7 @@ export const hideAddPostModalAction = () => {
 };
 
 // getting the posts for the feed
-const baseEndPointPosts = `${process.env.REACT_APP_BE_PROD_URL}/posts/`;
+const baseEndPointPosts = `${REACT_APP_BE_PROD_URL}/posts/`;
 
 export const getFeedPostsAction = () => {
   return async (dispatch) => {
