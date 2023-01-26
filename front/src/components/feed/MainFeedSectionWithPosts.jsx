@@ -1,85 +1,85 @@
-import React, { useEffect, useState } from "react"
-import { Image } from "react-bootstrap"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect, useState } from "react";
+import { Image } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BsThreeDots,
   BsFillArrowDownCircleFill,
-  BsThreeDotsVertical
-} from "react-icons/bs"
+  BsThreeDotsVertical,
+} from "react-icons/bs";
 
 import {
   editShowToggleAction,
   getFeedPostsAction,
   saveSelectedFeedPostAction,
-  myPostUnClickedAction
-} from "../../redux/actions"
+  myPostUnClickedAction,
+} from "../../redux/actions";
 
-import FeedPostLike from "./FeedPostLike"
-import EditOwnPosts from "./EditOwnPosts"
+import FeedPostLike from "./FeedPostLike";
+import EditOwnPosts from "./EditOwnPosts";
 
 export default function MainFeedSectionWithPosts() {
   // const [showEdit, setShowEdit] = useState(false)
-  const editOptions = useSelector((state) => state.editPostModal.openDropdown)
+  const editOptions = useSelector((state) => state.editPostModal.openDropdown);
 
-  const allFeedPosts = useSelector((state) => state.feedPosts.feedPostArray)
+  const allFeedPosts = useSelector((state) => state.feedPosts.feedPostArray);
   //   reversing the array so we get the newest posts
 
-  const allLatestPosts = allFeedPosts.slice(0).reverse()
+  const allLatestPosts = allFeedPosts.slice(0).reverse();
 
-  const longerPosts = allLatestPosts.filter((post) => post.text.length > 10)
+  const longerPosts = allLatestPosts.filter((post) => post.text.length > 0);
 
   const userPresent = longerPosts.filter((post) => {
-    return post.user !== null
-  })
+    return post.user !== null;
+  });
 
-  const [length, setLength] = useState(25)
-  const latestPostSlice = userPresent.slice(0, length)
+  const [length, setLength] = useState(25);
+  const latestPostSlice = userPresent.slice(0, length);
 
   const increaseCurrentLength = (e) => {
-    const increment = 50
-    setLength(length + increment)
+    const increment = 50;
+    setLength(length + increment);
 
     if (
       length.length >= userPresent.length ||
       userPresent.length - length.length < increment
     ) {
-      alert("you have read all the posts!")
+      alert("you have read all the posts!");
     }
-  }
+  };
 
-  const userId = useSelector((state) => state.myProfile.detailsData._id)
-  const savedPost = useSelector((state) => state.editThisPost.selectedPost)
-  const dispatch = useDispatch()
+  const userId = useSelector((state) => state.myProfile.detailsData._id);
+  const savedPost = useSelector((state) => state.editThisPost.selectedPost);
+  const dispatch = useDispatch();
 
   const myPostClickedHandler = (post) => {
-    console.log("my post is clicked")
-    dispatch(editShowToggleAction())
-    console.log("saved post----------", post)
+    console.log("my post is clicked");
+    dispatch(editShowToggleAction());
+    console.log("saved post----------", post);
     // use this post when editing
-    dispatch(saveSelectedFeedPostAction(post))
-    console.log("edit Options click", editOptions)
-  }
+    dispatch(saveSelectedFeedPostAction(post));
+    console.log("edit Options click", editOptions);
+  };
 
   //unclick the dots button
 
   const myPostUnClickedHandler = (post) => {
-    console.log("my post is UNclicked")
-    dispatch(editShowToggleAction())
-    dispatch(myPostUnClickedAction(post))
-    console.log("unsaved post----------", post)
-    console.log("edit Options unclick", editOptions)
-  }
+    console.log("my post is UNclicked");
+    dispatch(editShowToggleAction());
+    dispatch(myPostUnClickedAction(post));
+    console.log("unsaved post----------", post);
+    console.log("edit Options unclick", editOptions);
+  };
 
   // back to top button
 
   const backToTop = () => {
-    window.scrollTo({ top: 0, behaviour: "smooth" })
-  }
+    window.scrollTo({ top: 0, behaviour: "smooth" });
+  };
 
   useEffect(() => {
-    dispatch(getFeedPostsAction())
+    dispatch(getFeedPostsAction());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [allFeedPosts]);
   return (
     <>
       {allFeedPosts && (
@@ -167,7 +167,7 @@ export default function MainFeedSectionWithPosts() {
                             width: "100%",
                             height: "300px",
                             overflow: "hidden",
-                            objectFit: "cover"
+                            objectFit: "cover",
                           }}
                         >
                           <Image
@@ -205,5 +205,5 @@ export default function MainFeedSectionWithPosts() {
         </>
       )}
     </>
-  )
+  );
 }
