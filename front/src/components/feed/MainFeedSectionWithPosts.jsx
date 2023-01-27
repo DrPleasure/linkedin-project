@@ -179,7 +179,8 @@ export default function MainFeedSectionWithPosts() {
                       )}
                     </div>
 
-                    <FeedPostLike />
+                    <FeedPostLike likes={post.likes} comments={post.comments} />
+
                   </div>
                 )}
               </div>
