@@ -4,7 +4,7 @@ import { FaRegCommentDots } from "react-icons/fa"
 import { BiRepost } from "react-icons/bi"
 import { RiSendPlaneFill } from "react-icons/ri"
 
-export default function FeedPostLike() {
+export default function FeedPostLike(props) {
   return (
     <>
       <div
@@ -14,11 +14,11 @@ export default function FeedPostLike() {
         <div className="start-a-post-icon-text gray-hover">
           <BsHandThumbsUp style={{ fontSize: "20px" }} />
 
-          <span>Like</span>
+          <span>{props.likes} Likes</span>
         </div>
         <div className="start-a-post-icon-text gray-hover ">
           <FaRegCommentDots style={{ fontSize: "20px" }} />
-          <span>Comment</span>
+          <span>{props.comments} Comment</span>
         </div>
         <div className="start-a-post-icon-text gray-hover">
           <BiRepost style={{ fontSize: "20px" }} />
