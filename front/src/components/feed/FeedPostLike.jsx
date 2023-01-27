@@ -1,12 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import { BsHandThumbsUp } from "react-icons/bs"
 import { FaRegCommentDots } from "react-icons/fa"
 import { BiRepost } from "react-icons/bi"
 import { RiSendPlaneFill } from "react-icons/ri"
 
-export default function FeedPostLike({ props }) {
-  const [showComments, setShowComments] = useState(false);
-
+export default function FeedPostLike(props) {
   return (
     <>
       <div
@@ -16,9 +14,9 @@ export default function FeedPostLike({ props }) {
         <div className="start-a-post-icon-text gray-hover">
           <BsHandThumbsUp style={{ fontSize: "20px" }} />
 
-          <span>{props.likes.length} Like</span>
+          <span>{props.likes.length} Likes</span>
         </div>
-        <div className="start-a-post-icon-text gray-hover " onClick={() => setShowComments(!showComments)}>
+        <div className="start-a-post-icon-text gray-hover ">
           <FaRegCommentDots style={{ fontSize: "20px" }} />
           <span>{props.comments.length} Comment</span>
         </div>
@@ -31,11 +29,6 @@ export default function FeedPostLike({ props }) {
           <span>Send</span>
         </div>
       </div>
-      {showComments && 
-        <div>
-          {props.map((comment, index) => <div key={index}>{comment.text}</div>)}
-        </div>
-      }
     </>
   )
 }
