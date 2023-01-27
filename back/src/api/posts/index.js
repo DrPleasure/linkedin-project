@@ -45,7 +45,7 @@ postsRouter.get("/", async (req, res, next) => {
     // const total = await PostsModel.countDocuments(query);
     const posts = await PostsModel.find(query)
       .populate("user")
-      .populate("likes") // Add this line to include population of likes
+      .populate("likes.user") // Add this line to include population of likes
     //   .skip((page - 1) * limit)
     //   .limit(limit);
 
