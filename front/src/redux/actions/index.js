@@ -294,6 +294,14 @@ export const getFeedPostsAction = () => {
         let data = await resp.json();
         let fetchedPosts = data;
 
+        // Map through the likes array and replace the user id with the actual user data
+        fetchedPosts.forEach((post) => {
+          post.likes = post.likes.map((like) => {
+            like.user = like.userData;
+            return like;
+          });
+        });
+
         console.log("Users are ->", fetchedPosts);
         dispatch({
           type: GET_FEED_POSTS,
@@ -307,6 +315,7 @@ export const getFeedPostsAction = () => {
     }
   };
 };
+
 
 // adding new feed post
 export const addingNewFeedPostAction = (newFeedPost) => {

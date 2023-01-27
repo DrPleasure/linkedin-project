@@ -9,10 +9,12 @@ const likesSchema = new Schema(
       required: true,
       enum: ["👍", "😊", "🤓"],
     },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
   }
 );
+
 
 export default model("Like", likesSchema);
