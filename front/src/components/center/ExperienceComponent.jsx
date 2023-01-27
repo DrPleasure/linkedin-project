@@ -35,7 +35,7 @@ const ExperienceComponent = ({ profileData }) => {
   //   (state) => state.experiences.experiences
   // );
 
-const experiencesArray = useSelector(state => state.otherUser.selectedUser.experiences)
+const experiencesArray = useSelector(state => state.experiences.experiences)
 
   useEffect(() => {
     dispatch(getMyProfileDetailsAction(userId));
