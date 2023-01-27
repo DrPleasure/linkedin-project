@@ -130,9 +130,10 @@ export const collapseMessengerAction = () => {
 
 // get My Profile Details Fetching Action
 
-const baseUrlMe = `${BE_PROD_URL}/users/63ce6117d27ba46f82b30988`;
 
-export const getMyProfileDetailsAction = () => {
+export const getMyProfileDetailsAction = (userId) => {
+  const baseUrlMe = `${BE_PROD_URL}/users/${userId}`;
+
   return async (dispatch) => {
     console.log(
       "----------------fetching My Profile Details---------------------"

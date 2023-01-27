@@ -36,7 +36,7 @@ const ExperienceComponent = ({ profileData }) => {
   );
 
   useEffect(() => {
-    dispatch(getMyProfileDetailsAction());
+    dispatch(getMyProfileDetailsAction(userId));
   }, []);
 
   //fetches all the experiences with GET method
@@ -122,7 +122,7 @@ const ExperienceComponent = ({ profileData }) => {
                         <div className="mr-2">
                           <Icon.CloudDownloadFill />
                         </div>
-                        <div>Download as CSV</div>
+                        <div><a href="https://linkedin-project-production.up.railway.app/users/63ce6117d27ba46f82b30988/experiences/all/csv"> Download as CSV</a></div>
                       </div>
                     </div>
                   </div>
