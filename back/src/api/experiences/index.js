@@ -97,9 +97,10 @@ router.put("/:userId/experiences/:expId", (req, res) => {
       // experience = { ...req.body, updatedAt: new Date() };
       // console.log("experience", experience);
 
-      experience.area = req.body.area;
-      experience.description = req.body.description;
-      experience.image = req.body.image;
+      // experience.area = req.body.area;
+      // experience.description = req.body.description;
+      // experience.image = req.body.image;
+      experience.role = req.body.role;
       // add other fields as required
       // console.log("experince.role", experience.role);
       // console.log("experince.image", experience.image);
