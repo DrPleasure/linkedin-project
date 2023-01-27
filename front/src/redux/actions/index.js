@@ -279,10 +279,9 @@ export const hideAddPostModalAction = () => {
     type: "HIDE_WRITE_A_POST",
   };
 };
-console.log("it aint worker")
+
 // getting the posts for the feed
 const baseEndPointPosts = `${REACT_APP_BE_PROD_URL}/posts/`;
-const baseEndPointUsers = `${REACT_APP_BE_PROD_URL}/users/`;
 
 export const getFeedPostsAction = () => {
   return async (dispatch) => {
@@ -294,14 +293,7 @@ export const getFeedPostsAction = () => {
       if (resp.ok) {
         let data = await resp.json();
         let fetchedPosts = data;
-        // Fetch the user data for each post
-        for (let i = 0; i < fetchedPosts.length; i++) {
-          const userResp = await fetch(`${baseEndPointUsers}${fetchedPosts[i].user}`);
-          const userData = await userResp.json();
-          fetchedPosts[i].userData = userData;
-          console.log(`fetchedPosts[${i}].user`, fetchedPosts[i].user)
 
-        }
         // Map through the likes array and replace the user id with the actual user data
         fetchedPosts.forEach((post) => {
           post.likes = post.likes.map((like) => {
@@ -309,6 +301,8 @@ export const getFeedPostsAction = () => {
             return like;
           });
         });
+        
+
         console.log("Users are ->", fetchedPosts);
         dispatch({
           type: GET_FEED_POSTS,
@@ -322,7 +316,6 @@ export const getFeedPostsAction = () => {
     }
   };
 };
-
 
 
 // adding new feed post
