@@ -297,10 +297,11 @@ export const getFeedPostsAction = () => {
         // Map through the likes array and replace the user id with the actual user data
         fetchedPosts.forEach((post) => {
           post.likes = post.likes.map((like) => {
-            like.user = like.userData;
+            like.user = like.userData.name; // Access the name property of the user object
             return like;
           });
         });
+        
 
         console.log("Users are ->", fetchedPosts);
         dispatch({
