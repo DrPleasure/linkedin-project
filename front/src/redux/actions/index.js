@@ -296,7 +296,7 @@ export const getFeedPostsAction = () => {
         let fetchedPosts = data;
         // Fetch the user data for each post
         for (let i = 0; i < fetchedPosts.length; i++) {
-          const userResp = await fetch(`${baseEndPointUsers}${fetchedPosts[i].user}`);
+          const userResp = await fetch(`${baseEndPointUsers}${fetchedPosts[i].user.toString()}`);
           const userData = await userResp.json();
           fetchedPosts[i].userData = userData;
           console.log(`fetchedPosts[${i}].user`, fetchedPosts[i].user)
