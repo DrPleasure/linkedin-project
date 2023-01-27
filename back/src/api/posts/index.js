@@ -36,7 +36,7 @@ postsRouter.post("/", checksPostSchema, triggerBadRequest, async (req, res, next
     next(error);
   }
 });
-
+console.log("hope we work")
 postsRouter.get("/", async (req, res, next) => {
   try {
     let query = {};
