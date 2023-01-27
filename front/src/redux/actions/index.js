@@ -299,6 +299,8 @@ export const getFeedPostsAction = () => {
           const userResp = await fetch(`${baseEndPointUsers}${fetchedPosts[i].user}`);
           const userData = await userResp.json();
           fetchedPosts[i].userData = userData;
+          console.log(`fetchedPosts[${i}].user`, fetchedPosts[i].user)
+
         }
         // Map through the likes array and replace the user id with the actual user data
         fetchedPosts.forEach((post) => {
