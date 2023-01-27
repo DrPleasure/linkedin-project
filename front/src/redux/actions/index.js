@@ -279,7 +279,7 @@ export const hideAddPostModalAction = () => {
     type: "HIDE_WRITE_A_POST",
   };
 };
-
+console.log("it aint worker")
 // getting the posts for the feed
 const baseEndPointPosts = `${REACT_APP_BE_PROD_URL}/posts/`;
 const baseEndPointUsers = `${REACT_APP_BE_PROD_URL}/users/`;
