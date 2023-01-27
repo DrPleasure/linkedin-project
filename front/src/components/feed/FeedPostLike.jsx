@@ -14,11 +14,11 @@ export default function FeedPostLike(props) {
         <div className="start-a-post-icon-text gray-hover">
           <BsHandThumbsUp style={{ fontSize: "20px" }} />
 
-          <span>{props.likes} Likes</span>
+          <span>{props.likes.length} Likes</span>
         </div>
         <div className="start-a-post-icon-text gray-hover ">
           <FaRegCommentDots style={{ fontSize: "20px" }} />
-          <span>{props.comments} Comment</span>
+          <span>{props.comments.length} Comment</span>
         </div>
         <div className="start-a-post-icon-text gray-hover">
           <BiRepost style={{ fontSize: "20px" }} />
