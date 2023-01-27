@@ -31,9 +31,11 @@ const ExperienceComponent = ({ profileData }) => {
   );
 
   //gets all the experiences from the redux state
-  const experiencesArray = useSelector(
-    (state) => state.experiences.experiences
-  );
+  // const experiencesArray = useSelector(
+  //   (state) => state.experiences.experiences
+  // );
+
+const experiencesArray = useSelector(state => state.otherUser.selectedUser.experiences)
 
   useEffect(() => {
     dispatch(getMyProfileDetailsAction(userId));
